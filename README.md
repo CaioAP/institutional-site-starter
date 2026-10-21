@@ -6,7 +6,7 @@ WCAG 2.2 AA, with a swappable content layer.
 
 Sample content belongs to a fictitious firm, **Exemplo Advocacia**.
 
-> Status: milestones 1–3 (Foundation, Content layer, Pages). See the build plan in
+> Status: milestones 1–4 (Foundation, Content layer, Pages, Features). See the build plan in
 > [docs/decisions.md](docs/decisions.md).
 
 ## Requirements
@@ -32,7 +32,8 @@ pnpm dev            # http://localhost:3000 (pt-BR) and /en
 | `pnpm lint` / `pnpm lint:fix` | ESLint (`@nuxt/eslint`, stylistic) |
 | `pnpm typecheck` | `vue-tsc` via `nuxt typecheck` |
 | `pnpm test:unit` | Vitest |
-| `pnpm test:e2e` | Playwright + axe against the generated site (run `pnpm generate` first) |
+| `pnpm generate:test` | Generate with analytics + endpoint form enabled (what e2e expects) |
+| `pnpm test:e2e` | Playwright + axe against the generated site (run `pnpm generate:test` first) |
 
 ## Project structure
 
@@ -48,6 +49,16 @@ tests/               unit/, nuxt/, e2e/, a11y/, support/
 docs/                decisions.md, theming.md
 theme.config.ts      brand: name, logo, colors, fonts, socials
 ```
+
+## Features
+
+- **Search:** Pagefind index per locale, built after `generate`. Press `/` anywhere.
+- **Contact form:** accessible validation, honeypot, `FORM_PROVIDER=netlify|endpoint`.
+- **Cookie consent (LGPD):** reject is as easy as accept; analytics
+  (`ANALYTICS_PROVIDER=ga4|plausible`) loads only after consent.
+- **WhatsApp button**, **lite video embeds**, **reduced-motion-aware animations**.
+
+All configuration is in [`.env.example`](.env.example).
 
 ## Rebranding
 

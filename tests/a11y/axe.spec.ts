@@ -15,3 +15,18 @@ for (const url of urls) {
     expect(summary).toEqual([])
   })
 }
+
+test('no axe violations with the search and consent dialogs open', async ({ page }) => {
+  await page.goto('/en')
+  await page.getByRole('button', { name: 'Customize' }).click()
+  await expect(page.getByRole('dialog', { name: 'Cookie preferences' })).toBeVisible()
+  let results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze()
+  expect(results.violations.map(v => v.id)).toEqual([])
+  await page.getByRole('button', { name: 'Reject optional' }).click()
+
+  await page.locator('body').press('/')
+  await page.getByRole('searchbox').fill('law')
+  await expect(page.getByRole('dialog').getByRole('listitem').first()).toBeVisible()
+  results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze()
+  expect(results.violations.map(v => v.id)).toEqual([])
+})

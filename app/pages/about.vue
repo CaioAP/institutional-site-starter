@@ -4,7 +4,11 @@ usePageSeo(() => ({ ...page.value.seo, title: page.value.seo.title ?? page.value
 </script>
 
 <template>
-  <div>
+  <div
+    data-pagefind-body
+    data-pagefind-meta="type:page"
+    data-pagefind-filter="type:page"
+  >
     <SectionsPageIntro
       :title="page.title"
       :lead="page.lead"

@@ -19,9 +19,7 @@ usePageSeo(() => ({ ...page.value.seo, title: page.value.seo.title ?? page.value
         >
           {{ page.title }}
         </h2>
-        <p class="text-text-muted">
-          {{ t('contact.formSoon') }}
-        </p>
+        <FormsContactForm :email="settings?.contact.email ?? ''" />
       </section>
       <aside aria-labelledby="contact-info">
         <h2

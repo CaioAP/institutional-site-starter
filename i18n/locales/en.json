@@ -98,14 +98,70 @@
     "phone": "Phone",
     "whatsapp": "WhatsApp",
     "address": "Address",
-    "hours": "Office hours",
-    "formSoon": "The contact form will be added soon."
+    "hours": "Office hours"
   },
   "search": {
-    "soon": "Search will be added soon."
+    "label": "Search the site",
+    "placeholder": "Type what you are looking for",
+    "submit": "Search",
+    "close": "Close search",
+    "results": "{n} result | {n} results",
+    "noResults": "No results for “{q}”.",
+    "loading": "Searching…",
+    "unavailable": "Search is available after the site is built (pnpm generate).",
+    "shortcut": "Shortcut: / key",
+    "seeAll": "See all results",
+    "types": {
+      "page": "Page",
+      "area": "Practice area",
+      "team": "Team",
+      "post": "Article"
+    }
   },
   "hero": {
     "playVideo": "Play background video",
     "pauseVideo": "Pause background video"
+  },
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "phoneHint": "Optional. Include the area code.",
+    "subject": "Subject",
+    "message": "Message",
+    "consent": "I have read and agree to the {link}.",
+    "consentLink": "privacy policy",
+    "required": "required",
+    "honeypot": "Do not fill in this field",
+    "submit": "Send message",
+    "sending": "Sending…",
+    "success": "Message sent. We will reply within one business day.",
+    "error": "Your message could not be sent. Please try again or email {email}.",
+    "summary": "The form has {n} error. Please fix the highlighted field. | The form has {n} errors. Please fix the highlighted fields.",
+    "errors": {
+      "required": "Please fill in this field.",
+      "email": "Enter a valid email address, like name{'@'}example.com.",
+      "phone": "Enter a valid phone number, including the area code.",
+      "tooShort": "Write at least 10 characters.",
+      "consent": "You need to agree to the privacy policy."
+    }
+  },
+  "consent": {
+    "title": "Your privacy",
+    "text": "We use essential cookies to make the site work and, with your permission, analytics cookies to understand how it is used. Learn more in our {link}.",
+    "accept": "Accept all",
+    "reject": "Reject optional",
+    "customize": "Customize",
+    "preferencesTitle": "Cookie preferences",
+    "necessary": "Essential",
+    "necessaryText": "Required for the site to work. Always on.",
+    "analytics": "Analytics",
+    "analyticsText": "Help us understand which pages are visited most. Data is aggregated.",
+    "save": "Save preferences",
+    "close": "Close"
+  },
+  "whatsapp": {
+    "label": "Chat on WhatsApp",
+    "message": "Hello! I found you through the website and would like more information."
   }
 }

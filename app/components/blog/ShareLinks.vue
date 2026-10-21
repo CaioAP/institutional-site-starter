@@ -16,7 +16,7 @@ const links = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div data-pagefind-ignore>
     <h2 class="mb-3 font-sans text-sm font-semibold tracking-wide uppercase">
       {{ t('blog.share') }}
     </h2>

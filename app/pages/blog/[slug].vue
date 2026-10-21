@@ -19,7 +19,11 @@ const categoryLink = computed(() => localePath({ name: 'blog-category-category',
 </script>
 
 <template>
-  <article>
+  <article
+    data-pagefind-body
+    data-pagefind-meta="type:post"
+    data-pagefind-filter="type:post"
+  >
     <header class="border-b border-border/30 bg-surface-muted">
       <div class="container-content py-12 md:py-16">
         <LayoutBreadcrumbs
@@ -92,13 +96,17 @@ const categoryLink = computed(() => localePath({ name: 'blog-category-category',
       </aside>
     </div>
 
-    <div class="container-content max-w-4xl pb-14">
+    <div
+      class="container-content max-w-4xl pb-14"
+      data-pagefind-ignore
+    >
       <BlogAuthorCard :author="post.author" />
     </div>
 
     <section
       v-if="post.related.length"
       aria-labelledby="related-posts"
+      data-pagefind-ignore
       class="bg-surface-muted py-14"
     >
       <div class="container-content">
