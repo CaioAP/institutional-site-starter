@@ -10,7 +10,7 @@
     "dev": "nuxt dev",
     "build": "nuxt build",
     "generate": "nuxt generate && node scripts/postgenerate.ts",
-    "preview": "npx serve .output/public",
+    "preview": "node tests/support/static-server.ts",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

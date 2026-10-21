@@ -12,6 +12,8 @@ describe('search helpers', () => {
   it('normalizes result URLs', () => {
     expect(cleanUrl('/en/blog/x/')).toBe('/en/blog/x')
     expect(cleanUrl('/sobre/index.html')).toBe('/sobre')
+    expect(cleanUrl('/en/about.html')).toBe('/en/about')
+    expect(cleanUrl('/index.html')).toBe('/')
     expect(cleanUrl('/')).toBe('/')
   })
 })

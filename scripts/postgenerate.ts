@@ -1,27 +1,28 @@
 /**
  * Runs after `nuxt generate`:
- *  1. Copies the prerendered localized not-found pages to the 404.html files
- *     that Cloudflare Pages / Netlify serve for missing URLs.
+ *  1. Checks the localized not-found pages exist where Cloudflare Pages and
+ *     Netlify look for them (404.html, en/404.html).
  *  2. Builds the Pagefind search index. Pagefind reads <html lang> and writes
  *     one index per language, so results always match the visitor's locale.
  *     Only elements marked `data-pagefind-body` are indexed.
+ *  3. Writes `_headers` (security + cache headers, read by Cloudflare Pages
+ *     and Netlify). The CSP allows inline scripts by hash, so the hashes are
+ *     collected from the generated HTML.
  */
-import { access, copyFile } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
+import { access, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import * as pagefind from 'pagefind'
+import { readBuildEnv } from '../lib/deploy/env.ts'
+import { formatHeadersFile, headerRules } from '../lib/deploy/headers.ts'
 
 const out = join(process.cwd(), '.output/public')
 
-const notFound: Array<[string, string]> = [
-  ['404/index.html', '404.html'],
-  ['en/404/index.html', 'en/404.html'],
-]
-
-for (const [from, to] of notFound) {
-  const src = join(out, from)
-  await access(src)
-  await copyFile(src, join(out, to))
-  console.log(`[postgenerate] ${from} → ${to}`)
+// The /404 routes prerender straight to these files (autoSubfolderIndex: false).
+for (const file of ['404.html', 'en/404.html']) {
+  await access(join(out, file)).catch(() => {
+    throw new Error(`[postgenerate] Missing ${file}: is the 404 route still prerendered?`)
+  })
 }
 
 const { index, errors } = await pagefind.createIndex({})
@@ -32,3 +33,24 @@ const written = await index.writeFiles({ outputPath: join(out, 'pagefind') })
 if (written.errors.length) throw new Error(`[postgenerate] Pagefind: ${written.errors.join(', ')}`)
 await pagefind.close()
 console.log(`[postgenerate] Pagefind indexed ${added.page_count} pages`)
+
+/** sha256 of every executable inline script (data scripts like JSON-LD don't need one). */
+async function inlineScriptHashes(dir: string): Promise<string[]> {
+  const hashes = new Set<string>()
+  const files = (await readdir(dir, { recursive: true })).filter(f => f.endsWith('.html'))
+  for (const file of files) {
+    const html = await readFile(join(dir, file), 'utf8')
+    for (const [, attrs, body] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)) {
+      if (!body || /\bsrc=/.test(attrs!)) continue
+      const type = attrs!.match(/\btype="([^"]*)"/)?.[1]
+      if (type && type !== 'module' && type !== 'importmap' && type !== 'text/javascript') continue
+      hashes.add(`sha256-${createHash('sha256').update(body).digest('base64')}`)
+    }
+  }
+  return [...hashes]
+}
+
+const env = readBuildEnv()
+const hashes = await inlineScriptHashes(out)
+await writeFile(join(out, '_headers'), formatHeadersFile(headerRules(env, hashes)))
+console.log(`[postgenerate] _headers written (${env.siteEnv}, ${hashes.length} inline script hashes)`)

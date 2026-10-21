@@ -1,0 +1,9 @@
+# Cloudflare Pages (default host). Build settings in the dashboard:
+#   Framework preset: None · Build command: pnpm generate
+#   Build output directory: .output/public
+# Node version comes from .node-version. Security and cache headers come from
+# the generated .output/public/_headers; Cloudflare serves the nearest
+# 404.html (/en/404.html for English URLs) on its own. Guide: docs/deploy.md
+name = "institutional-site-starter"
+pages_build_output_dir = ".output/public"
+compatibility_date = "2026-10-01"

@@ -6,7 +6,8 @@ WCAG 2.2 AA, with a swappable content layer.
 
 Sample content belongs to a fictitious firm, **Exemplo Advocacia**.
 
-> Status: milestones 1–4 (Foundation, Content layer, Pages, Features). See the build plan in
+> Status: milestones 1–6 (Foundation, Content layer, Pages, Features, SEO and
+> performance, Deploy). Decisions and versions are in
 > [docs/decisions.md](docs/decisions.md).
 
 ## Requirements
@@ -28,7 +29,7 @@ pnpm dev            # http://localhost:3000 (pt-BR) and /en
 | --- | --- |
 | `pnpm dev` | Dev server |
 | `pnpm generate` | Static site in `.output/public` (+ post-generate steps) |
-| `pnpm preview` | Serve the generated site |
+| `pnpm preview` | Serve the generated site like the hosts do (headers, 404s), on port 4173 |
 | `pnpm lint` / `pnpm lint:fix` | ESLint (`@nuxt/eslint`, stylistic) |
 | `pnpm typecheck` | `vue-tsc` via `nuxt typecheck` |
 | `pnpm test:unit` | Vitest |
@@ -44,10 +45,13 @@ app/assets/css/      tokens.css (Tailwind theme mapping), base.css
 i18n/locales/        UI strings (pt-BR.json, en.json)
 i18n/routes.ts       translated slugs for every page
 modules/theme.ts     turns theme.config.ts into CSS variables + fonts
-lib/                 framework-free code (content layer, utilities)
-scripts/             build steps (post-generate)
+lib/                 framework-free code (content layer, forms, consent, deploy headers)
+server/              sitemap source (build time only; nothing runs on a server in production)
+scripts/             build steps (post-generate: 404 check, search index, _headers)
 tests/               unit/, nuxt/, e2e/, a11y/, support/
-docs/                decisions.md, theming.md
+docs/                decisions.md, theming.md, content-model.md, deploy.md
+netlify.toml         Netlify build settings
+wrangler.toml        Cloudflare Pages output directory
 theme.config.ts      brand: name, logo, colors, fonts, socials
 ```
 
@@ -70,6 +74,22 @@ theme.config.ts      brand: name, logo, colors, fonts, socials
   Best Practices ≥ 95, SEO 100, LCP < 2.5 s, CLS < 0.1 (mobile).
 
 All configuration is in [`.env.example`](.env.example).
+
+## Deploying
+
+Cloudflare Pages (default) or Netlify: build command `pnpm generate`, output
+`.output/public`, and set `NUXT_PUBLIC_SITE_URL`. A fresh clone builds with no
+env vars at all. Security headers (strict CSP), preview `noindex` and
+CMS deploy hooks are covered in [docs/deploy.md](docs/deploy.md).
+
+## Continuous integration
+
+Every push and PR runs, in GitHub Actions:
+
+1. Lint, typecheck, unit tests.
+2. Test build, then Playwright e2e and axe (desktop and mobile) against the
+   static output served with the generated headers. Any CSP violation fails.
+3. Production build with no env vars, then the Lighthouse budgets.
 
 ## Rebranding
 

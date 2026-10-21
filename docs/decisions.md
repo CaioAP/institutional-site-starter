@@ -358,3 +358,63 @@ ships.
 Since the banner is now clickable before Vue hydrates, tests could click it
 too early. A client plugin sets `<html data-hydrated>` after hydration and
 `tests/support/test.ts` makes `page.goto` wait for it.
+
+## Milestone 6 – Deploy (2026-10-21)
+
+No new dependencies.
+
+### One `_headers` file for both hosts
+
+Cloudflare Pages and Netlify both read `_headers` from the output directory,
+so headers are generated once by `scripts/postgenerate.ts` from
+`lib/deploy/headers.ts` instead of being written twice (and drifting) in
+`netlify.toml` and a Cloudflare file. The spec asks for headers in
+`netlify.toml`; this is the same result from a single source.
+
+### CSP with hashes, not `'unsafe-inline'`
+
+Nuxt's static output has a few inline scripts (runtime config, import map,
+the consent head script). Their sha256 hashes are collected from the
+generated HTML at build time, so `script-src` needs no `'unsafe-inline'`.
+`style-src` keeps `'unsafe-inline'` because Vue binds inline `style`
+attributes; styles can't execute code. `'wasm-unsafe-eval'` is needed by
+Pagefind. Hosts for the form endpoint and analytics are added only when the
+build env enables them; video embeds allow youtube-nocookie.com and
+player.vimeo.com frames.
+
+The local static server applies the generated `_headers`, and the shared
+Playwright fixture fails any test that logs a CSP violation. So the e2e suite
+(search, embeds, Plausible, the endpoint form) proves the policy is complete,
+and a new third-party script without a CSP entry fails CI.
+
+### Flat `.html` files (no trailing-slash redirects)
+
+With `/sobre/index.html`, Cloudflare Pages redirects `/sobre` to `/sobre/`,
+so every canonical URL (no trailing slash) would point at a redirect. Nitro's
+`prerender.autoSubfolderIndex: false` writes `/sobre.html`, which both hosts
+serve at `/sobre` directly. The localized 404 pages now land at `404.html`
+and `en/404.html` without the copy step. Pagefind result URLs drop `.html`.
+`nitro.preset: 'static'` is pinned so neither host's auto-detected preset
+changes the output layout.
+
+### Previews are noindex
+
+`lib/deploy/env.ts` treats Cloudflare branch builds and Netlify deploy
+previews and branch deploys as previews. Site config then sets
+`indexable: false`: `robots.txt` disallows everything, pages get
+`noindex, nofollow`, and `_headers` adds `X-Robots-Tag: noindex`.
+`NUXT_SITE_ENV` overrides the detection. Verified with
+`CF_PAGES_BRANCH=feature-x pnpm generate`.
+
+### One source for build env
+
+`readBuildEnv()` holds every variable and default. `nuxt.config.ts` and
+`postgenerate` both use it, so the CSP always matches what the pages load.
+Unit tests check that the defaults build with no env vars at all, and CI's
+Lighthouse job builds that way and checks the output files.
+
+### Build hooks
+
+Documented in `docs/deploy.md` (Cloudflare deploy hooks, Netlify build hooks,
+and a Sanity webhook pointing at one). No account was created and no hook URL
+is in the repo.
