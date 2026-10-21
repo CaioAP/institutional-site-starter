@@ -73,3 +73,172 @@ the skip link stays the first tab stop.
 axe's `label-content-name-mismatch` (WCAG 2.5.3) flagged a visible "EN" with an
 `aria-label` of "View this page in English". The switcher now shows the
 language name as visible text, marked with `lang` and `hreflang`.
+
+## Milestone 2 – Content layer (2026-10-21)
+
+### Versions
+
+| Package | Version | Notes |
+| --- | --- | --- |
+| @nuxt/content | 3.16.2 | SQLite via Node's built-in `node:sqlite` (`experimental.sqliteConnector: 'native'`), no native build step |
+| @nuxt/image | 2.2.0 | installed now, used from the pages milestone |
+
+### Adapters are framework-free
+
+`lib/content/` has no Nuxt imports. The local adapter receives a `LocalStore`
+(`all(collection, locale)`), which the app implements with `queryCollection`
+and tests implement with in-memory fixtures. That keeps the adapter fully
+unit-testable and lets the Sanity adapter plug into the same interface.
+
+Collections are small for institutional sites, so the adapter loads a whole
+collection per locale once (memoized) and filters, sorts and paginates in
+JavaScript. If a client ever has thousands of posts, push filtering into
+`LocalStore`.
+
+### Rich text is a normalized AST, not HTML
+
+Adapters convert their native format (Nuxt Content minimark, later Sanity
+Portable Text) into `RichText` (`lib/content/types.ts`): whitelisted elements,
+plus `image` and `video` nodes. No `v-html`, so nothing to sanitize at render
+time. `h1` in content is demoted to `h2` to keep one `h1` per page. Unsafe
+links (`javascript:`, `data:`) are dropped.
+
+### Translations are linked with `translationKey`
+
+Each localized file has the same `translationKey` in every locale; the slug is
+the file name. References (post author and category, area team, member areas)
+also use `translationKey`, so they don't break when a slug is translated.
+
+### `listRoutes()` is the only prerender source
+
+`nitro.prerender.crawlLinks` is off. While `/` is prerendered,
+`app/plugins/prerender-routes.server.ts` sends every path from
+`listRoutes()` to Nitro through `prerenderRoutes()`. A route missing from
+`listRoutes()` is therefore missing from the build, which the e2e suite catches.
+
+### Additions to the spec's interface
+
+- `getPage(key, locale)` takes a stable page key (`home`, `about`, `contact`,
+  `search`, `privacy`, `terms`) instead of a slug, because page slugs are
+  translated in `i18n/routes.ts`.
+- `listCategories(locale)` feeds the blog's category filter and category routes.
+- `listPosts` accepts `perPage` (used by `listRoutes`).
+- Summaries (`PostSummary`, `PracticeAreaSummary`, `TeamMemberSummary`) carry
+  `translations` so listings and the sitemap can build alternates without
+  fetching every detail document.
+
+### Post excerpt field is `description`
+
+Nuxt Content's `page` collections reserve `excerpt` (it is filled from a
+`<!--more-->` marker and overwrote our frontmatter with `null`). Posts use
+`description` in frontmatter; the domain model still calls it `excerpt`.
+
+### Sample media
+
+All images in `public/images/` are generated abstract compositions (no
+people, no third-party assets). The sample video embed points to *Big Buck
+Bunny* on YouTube (Blender Foundation, CC BY 3.0) and is labelled as such.
+The hero supports a muted video with a poster, but the sample uses an image
+only, so the starter ships no video file.
+
+## Milestone 3 – Pages (2026-10-21)
+
+### Language switcher links are resolved after the page renders
+
+During SSR the header renders before the page has loaded its content, so it
+can't know a post's translated slug yet. Pages register their translations with
+`useAlternates()`; the switcher emits a placeholder during SSR and
+`server/plugins/alternate-links.ts` swaps in the real link (or the localized
+listing when there is no translation) once the page has rendered. On the client
+the state is hydrated from the payload, so there's no mismatch. `setI18nParams`
+is called too, so @nuxtjs/i18n's own `hreflang` links use translated slugs.
+
+### `app/components/content/` is reserved
+
+Nuxt Content registers everything in `components/content/` as global MDC
+components without a prefix. The RichText renderer lives in
+`components/rich-text/` instead.
+
+### Image sizes need an `xs` screen
+
+@nuxt/image 2 treats a bare size (`sizes="100vw"`) as a 1px screen and
+generates 1px variants. The config adds `xs: 320` and components write
+mobile-first sizes (`xs:100vw md:50vw`). Every `<NuxtImg>` requests WebP.
+
+### Lite video embed shows no third-party thumbnail
+
+Fetching the YouTube thumbnail would contact Google before consent, so the
+embed shows a local poster with the video title. The iframe (YouTube on
+`youtube-nocookie.com`, Vimeo with `dnt=1`) loads only on click and receives
+focus.
+
+### `v-reveal` is in place early
+
+The pages use `v-reveal`, so the directive landed here: content is visible in
+the server HTML, only elements below the fold are hidden on the client, and
+`prefers-reduced-motion` disables it. The features milestone adds tests.
+
+## Milestone 4 – Features (2026-10-21)
+
+### Versions
+
+| Package | Version | Notes |
+| --- | --- | --- |
+| pagefind | 1.5.2 | Node API, run from `scripts/postgenerate.ts` |
+
+### Search
+
+Pagefind runs after `nuxt generate` and writes one index per `<html lang>`
+(`pt-br`, `en`), so the browser only loads and searches the current
+locale's index. Only detail pages, About and the legal pages are indexed
+(`data-pagefind-body`); listings, search and 404 are not. Each indexed page
+carries `data-pagefind-meta="type:page|area|team|post"` and the UI labels
+results from it. Breadcrumbs, share links, related posts and CTAs are marked
+`data-pagefind-ignore`.
+
+The UI uses Pagefind's JS API (not its default UI) so it matches the design
+system and accessibility patterns: a native `<dialog>` (Esc, focus return and
+inert background for free), `/` shortcut, a `role="status"` result count, and
+a full results page that keeps `?q=` in the URL. Excerpts are parsed into
+text parts instead of rendered with `v-html`. In `pnpm dev` there is no index;
+the UI says so.
+
+### Contact form
+
+`lib/forms/contact.ts` holds validation and the provider adapters
+(`FORM_PROVIDER=netlify` posts urlencoded data with `form-name`;
+`FORM_PROVIDER=endpoint` posts JSON to `FORM_ENDPOINT`, e.g. Formspree or a
+Worker). The rendered `<form>` carries `data-netlify` + `netlify-honeypot` so
+Netlify detects it in the static HTML. Validation runs on submit, then live as
+fields are fixed; the first invalid field receives focus and the count is
+announced. Honeypot submissions show success without sending anything.
+
+### Consent and analytics
+
+Banner with Reject / Accept (same size and style) and Customize; choices are
+versioned in `localStorage` and reopened from the footer. Analytics
+(`ANALYTICS_PROVIDER=ga4|plausible`, `ANALYTICS_ID`) is injected by a client
+plugin only after consent; nothing analytics-related is in the static HTML.
+Revoking consent clears GA cookies and reloads, because a running script can't
+be unloaded. Plausible is cookieless and could arguably run without consent;
+the spec asks for consent first, so it is gated too.
+
+The banner isn't modal (the site stays usable) and hides the WhatsApp button
+while it's open so they never overlap.
+
+### WhatsApp button
+
+Uses SiteSettings' WhatsApp number; hidden when the number is empty or
+`WHATSAPP_BUTTON=false`. Its green is WhatsApp's brand color, not a theme
+token, and passes contrast with white.
+
+### Links are underlined by default
+
+axe's `link-in-text-block` flagged a link inside the consent label. Links are
+now underlined globally; navigation and cards opt out with `no-underline`.
+
+### Test build
+
+E2E needs analytics and the endpoint form enabled, so CI runs
+`pnpm generate:test` (sets `ANALYTICS_PROVIDER=plausible`,
+`FORM_PROVIDER=endpoint` with a fake endpoint the tests intercept).

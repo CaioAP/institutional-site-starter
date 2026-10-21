@@ -37,5 +37,131 @@
   },
   "placeholder": {
     "comingSoon": "Content coming soon."
+  },
+  "common": {
+    "readMore": "Learn more",
+    "seeAll": "See all",
+    "viewProfile": "View {name}'s profile",
+    "readArticle": "Read article: {title}",
+    "minutesRead": "{n} min read",
+    "publishedOn": "Published on {date}",
+    "updatedOn": "Updated on {date}",
+    "lastUpdated": "Last updated: {date}"
+  },
+  "home": {
+    "seeAllAreas": "See all practice areas",
+    "seeAllTeam": "Meet the team",
+    "seeAllPosts": "See all articles",
+    "mapLink": "View on map",
+    "contactCta": "Contact us"
+  },
+  "areas": {
+    "lead": "The areas of law the firm practices.",
+    "team": "Lawyers in this area",
+    "cta": "Need help with {area}?",
+    "ctaText": "Tell us about your case. We reply within one business day."
+  },
+  "team": {
+    "lead": "The lawyers who will follow your case closely.",
+    "areas": "Practice areas",
+    "contact": "Contact",
+    "registration": "Bar registration",
+    "email": "Email",
+    "linkedin": "{name} on LinkedIn"
+  },
+  "blog": {
+    "lead": "Articles and news on everyday legal topics.",
+    "categories": "Categories",
+    "all": "All",
+    "empty": "No articles found.",
+    "pagination": "Pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "pageN": "Page {n}",
+    "pageOf": "Page {page} of {total}",
+    "categoryTitle": "Articles about {category}",
+    "author": "About the author",
+    "related": "Related articles",
+    "share": "Share",
+    "shareOn": "Share on {network}",
+    "shareEmail": "Share by email",
+    "tags": "Tags",
+    "category": "Category"
+  },
+  "video": {
+    "play": "Play video: {title}",
+    "notice": "Playing loads the video from {provider}."
+  },
+  "contact": {
+    "info": "Contact details",
+    "email": "Email",
+    "phone": "Phone",
+    "whatsapp": "WhatsApp",
+    "address": "Address",
+    "hours": "Office hours"
+  },
+  "search": {
+    "label": "Search the site",
+    "placeholder": "Type what you are looking for",
+    "submit": "Search",
+    "close": "Close search",
+    "results": "{n} result | {n} results",
+    "noResults": "No results for “{q}”.",
+    "loading": "Searching…",
+    "unavailable": "Search is available after the site is built (pnpm generate).",
+    "shortcut": "Shortcut: / key",
+    "seeAll": "See all results",
+    "types": {
+      "page": "Page",
+      "area": "Practice area",
+      "team": "Team",
+      "post": "Article"
+    }
+  },
+  "hero": {
+    "playVideo": "Play background video",
+    "pauseVideo": "Pause background video"
+  },
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "phoneHint": "Optional. Include the area code.",
+    "subject": "Subject",
+    "message": "Message",
+    "consent": "I have read and agree to the {link}.",
+    "consentLink": "privacy policy",
+    "required": "required",
+    "honeypot": "Do not fill in this field",
+    "submit": "Send message",
+    "sending": "Sending…",
+    "success": "Message sent. We will reply within one business day.",
+    "error": "Your message could not be sent. Please try again or email {email}.",
+    "summary": "The form has {n} error. Please fix the highlighted field. | The form has {n} errors. Please fix the highlighted fields.",
+    "errors": {
+      "required": "Please fill in this field.",
+      "email": "Enter a valid email address, like name{'@'}example.com.",
+      "phone": "Enter a valid phone number, including the area code.",
+      "tooShort": "Write at least 10 characters.",
+      "consent": "You need to agree to the privacy policy."
+    }
+  },
+  "consent": {
+    "title": "Your privacy",
+    "text": "We use essential cookies to make the site work and, with your permission, analytics cookies to understand how it is used. Learn more in our {link}.",
+    "accept": "Accept all",
+    "reject": "Reject optional",
+    "customize": "Customize",
+    "preferencesTitle": "Cookie preferences",
+    "necessary": "Essential",
+    "necessaryText": "Required for the site to work. Always on.",
+    "analytics": "Analytics",
+    "analyticsText": "Help us understand which pages are visited most. Data is aggregated.",
+    "save": "Save preferences",
+    "close": "Close"
+  },
+  "whatsapp": {
+    "label": "Chat on WhatsApp",
+    "message": "Hello! I found you through the website and would like more information."
   }
 }

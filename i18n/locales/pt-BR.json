@@ -37,5 +37,131 @@
   },
   "placeholder": {
     "comingSoon": "Conteúdo em construção."
+  },
+  "common": {
+    "readMore": "Saiba mais",
+    "seeAll": "Ver todos",
+    "viewProfile": "Ver perfil de {name}",
+    "readArticle": "Ler artigo: {title}",
+    "minutesRead": "{n} min de leitura",
+    "publishedOn": "Publicado em {date}",
+    "updatedOn": "Atualizado em {date}",
+    "lastUpdated": "Última atualização: {date}"
+  },
+  "home": {
+    "seeAllAreas": "Ver todas as áreas",
+    "seeAllTeam": "Conhecer a equipe",
+    "seeAllPosts": "Ver todos os artigos",
+    "mapLink": "Ver no mapa",
+    "contactCta": "Fale conosco"
+  },
+  "areas": {
+    "lead": "Conheça as áreas em que o escritório atua.",
+    "team": "Profissionais desta área",
+    "cta": "Precisa de ajuda com {area}?",
+    "ctaText": "Conte o seu caso. Respondemos em até um dia útil."
+  },
+  "team": {
+    "lead": "Advogados que vão acompanhar o seu caso de perto.",
+    "areas": "Áreas de atuação",
+    "contact": "Contato",
+    "registration": "Registro",
+    "email": "E-mail",
+    "linkedin": "LinkedIn de {name}"
+  },
+  "blog": {
+    "lead": "Artigos e notícias sobre temas jurídicos do dia a dia.",
+    "categories": "Categorias",
+    "all": "Todos",
+    "empty": "Nenhum artigo encontrado.",
+    "pagination": "Paginação",
+    "previous": "Anterior",
+    "next": "Próxima",
+    "pageN": "Página {n}",
+    "pageOf": "Página {page} de {total}",
+    "categoryTitle": "Artigos sobre {category}",
+    "author": "Sobre o autor",
+    "related": "Leia também",
+    "share": "Compartilhar",
+    "shareOn": "Compartilhar no {network}",
+    "shareEmail": "Enviar por e-mail",
+    "tags": "Tags",
+    "category": "Categoria"
+  },
+  "video": {
+    "play": "Reproduzir vídeo: {title}",
+    "notice": "Ao reproduzir, o vídeo é carregado de {provider}."
+  },
+  "contact": {
+    "info": "Informações de contato",
+    "email": "E-mail",
+    "phone": "Telefone",
+    "whatsapp": "WhatsApp",
+    "address": "Endereço",
+    "hours": "Horário de atendimento"
+  },
+  "search": {
+    "label": "Buscar no site",
+    "placeholder": "Digite o que procura",
+    "submit": "Buscar",
+    "close": "Fechar busca",
+    "results": "{n} resultado | {n} resultados",
+    "noResults": "Nenhum resultado para “{q}”.",
+    "loading": "Buscando…",
+    "unavailable": "A busca fica disponível depois do build do site (pnpm generate).",
+    "shortcut": "Atalho: tecla /",
+    "seeAll": "Ver todos os resultados",
+    "types": {
+      "page": "Página",
+      "area": "Área de atuação",
+      "team": "Equipe",
+      "post": "Artigo"
+    }
+  },
+  "hero": {
+    "playVideo": "Reproduzir vídeo de fundo",
+    "pauseVideo": "Pausar vídeo de fundo"
+  },
+  "form": {
+    "name": "Nome",
+    "email": "E-mail",
+    "phone": "Telefone",
+    "phoneHint": "Opcional. Inclua o DDD.",
+    "subject": "Assunto",
+    "message": "Mensagem",
+    "consent": "Li e concordo com a {link}.",
+    "consentLink": "política de privacidade",
+    "required": "obrigatório",
+    "honeypot": "Não preencha este campo",
+    "submit": "Enviar mensagem",
+    "sending": "Enviando…",
+    "success": "Mensagem enviada. Responderemos em até um dia útil.",
+    "error": "Não foi possível enviar sua mensagem. Tente novamente ou escreva para {email}.",
+    "summary": "O formulário tem {n} erro. Corrija o campo destacado. | O formulário tem {n} erros. Corrija os campos destacados.",
+    "errors": {
+      "required": "Preencha este campo.",
+      "email": "Informe um e-mail válido, como nome{'@'}exemplo.com.",
+      "phone": "Informe um telefone válido, com DDD.",
+      "tooShort": "Escreva pelo menos 10 caracteres.",
+      "consent": "É preciso concordar com a política de privacidade."
+    }
+  },
+  "consent": {
+    "title": "Sua privacidade",
+    "text": "Usamos cookies essenciais para o site funcionar e, com a sua permissão, cookies de estatística para entender como ele é usado. Saiba mais na {link}.",
+    "accept": "Aceitar todos",
+    "reject": "Rejeitar opcionais",
+    "customize": "Personalizar",
+    "preferencesTitle": "Preferências de cookies",
+    "necessary": "Essenciais",
+    "necessaryText": "Necessários para o site funcionar. Sempre ativos.",
+    "analytics": "Estatística",
+    "analyticsText": "Ajudam a entender quais páginas são mais visitadas. Os dados são agregados.",
+    "save": "Salvar preferências",
+    "close": "Fechar"
+  },
+  "whatsapp": {
+    "label": "Conversar pelo WhatsApp",
+    "message": "Olá! Vim pelo site e gostaria de mais informações."
   }
 }

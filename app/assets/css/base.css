@@ -18,8 +18,9 @@
     line-height: 1.2;
   }
 
+  /* Links are underlined by default so they never rely on color alone (WCAG 1.4.1). */
   a {
-    @apply text-accent underline-offset-4;
+    @apply text-accent underline underline-offset-4;
   }
 
   a:hover {
@@ -64,5 +65,47 @@
 @utility on-inverse {
   & :focus-visible {
     outline-color: var(--color-text-inverse);
+  }
+}
+
+/* Long-form content rendered by <RichText>. */
+@layer components {
+  .prose-content {
+    @apply max-w-(--container-prose) text-lg;
+
+    & > * + * { margin-top: 1.25em; }
+    & h2 { @apply mt-12 text-3xl font-semibold; }
+    & h3 { @apply mt-10 text-2xl font-semibold; }
+    & h4 { @apply mt-8 text-xl font-semibold; }
+    & ul { @apply list-disc ps-6; }
+    & ol { @apply list-decimal ps-6; }
+    & li + li { margin-top: 0.4em; }
+    & a { @apply underline; }
+    & blockquote { @apply border-s-4 border-accent ps-5 text-text-muted italic; }
+    & code { @apply rounded-sm bg-surface-muted px-1 py-0.5 text-[0.9em]; }
+    & pre { @apply overflow-x-auto rounded-md bg-surface-muted p-4; }
+    & hr { @apply border-border/40; }
+    & th, & td { @apply border border-border/40 px-3 py-2 text-start; }
+  }
+}
+
+/* v-reveal entrance animation (see app/composables/useReveal.ts). */
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(1.25rem);
+    transition: opacity var(--duration-reveal) var(--ease-out-soft), transform var(--duration-reveal) var(--ease-out-soft);
+  }
+
+  .reveal.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
   }
 }

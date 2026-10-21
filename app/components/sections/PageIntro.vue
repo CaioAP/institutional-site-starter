@@ -1,14 +1,21 @@
 <script setup lang="ts">
-/** Page title block. Renders the page's single <h1>. */
+import type { Crumb } from '~/types/ui'
+
+/** Page title block. Renders the page's single <h1>, with optional breadcrumbs. */
 defineProps<{
   title: string
   lead?: string
+  breadcrumbs?: Crumb[]
 }>()
 </script>
 
 <template>
   <div class="border-b border-border/30 bg-surface-muted">
-    <div class="container-content py-14 md:py-20">
+    <div class="container-content py-12 md:py-16">
+      <LayoutBreadcrumbs
+        v-if="breadcrumbs?.length"
+        :items="breadcrumbs"
+      />
       <slot name="before" />
       <h1 class="max-w-3xl text-4xl font-semibold md:text-5xl">
         {{ title }}
@@ -19,6 +26,7 @@ defineProps<{
       >
         {{ lead }}
       </p>
+      <slot />
     </div>
   </div>
 </template>

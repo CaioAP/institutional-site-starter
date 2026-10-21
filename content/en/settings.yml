@@ -1,0 +1,28 @@
+firmName: Exemplo Advocacia
+tagline: Advisory and litigation services for businesses and families.
+contact:
+  email: contato@exemplo.com.br
+  phone: "+55 11 3000-0000"
+  whatsapp: "5511900000000"
+address:
+  street: Av. Exemplo, 1000, 10º andar
+  city: São Paulo
+  region: SP
+  postalCode: 01000-000
+  country: BR
+  mapUrl: https://www.openstreetmap.org/#map=16/-23.5617/-46.6560
+officeHours: Monday to Friday, 9am to 6pm
+socials:
+  - label: LinkedIn
+    url: https://www.linkedin.com/
+    icon: linkedin
+  - label: Instagram
+    url: https://www.instagram.com/
+    icon: instagram
+seo:
+  description: Fictitious law firm used as sample content for the starter.
+  image:
+    src: /images/og-default.jpg
+    alt: Exemplo Advocacia
+    width: 1200
+    height: 630

@@ -10,5 +10,8 @@
       <slot />
     </main>
     <LayoutSiteFooter />
+    <LayoutWhatsAppButton />
+    <ConsentBanner />
+    <ConsentPreferences />
   </div>
 </template>
