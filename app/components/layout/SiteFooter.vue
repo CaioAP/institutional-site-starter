@@ -4,13 +4,8 @@ import theme from '#theme'
 const { t } = useI18n()
 const { legalNav, to } = useNavigation()
 const year = new Date().getFullYear()
-
-// Contact details move to SiteSettings from the content layer in milestone 2.
-const contact = {
-  email: 'contato@exemplo.com.br',
-  phone: '+55 11 0000-0000',
-  address: 'Av. Exemplo, 1000 – São Paulo, SP',
-}
+const settings = await useSiteSettings()
+const tel = (phone: string) => `tel:${phone.replace(/[^+\d]/g, '')}`
 
 const consentOpen = () => {
   // Opens the consent preferences dialog (wired in the consent feature).
@@ -27,31 +22,43 @@ const consentOpen = () => {
           :width="theme.brand.logo.width"
           :height="theme.brand.logo.height"
           :alt="theme.brand.name"
+          loading="lazy"
         >
+        <p
+          v-if="settings"
+          class="max-w-xs"
+        >
+          {{ settings.tagline }}
+        </p>
       </div>
 
       <div>
         <h2 class="mb-3 font-sans text-sm font-semibold tracking-wide uppercase">
           {{ t('footer.contact') }}
         </h2>
-        <ul class="space-y-2">
+        <ul
+          v-if="settings"
+          class="space-y-2"
+        >
           <li>
             <a
-              :href="`mailto:${contact.email}`"
+              :href="`mailto:${settings.contact.email}`"
               class="text-text-inverse hover:text-text-inverse"
-            >{{ contact.email }}</a>
+            >{{ settings.contact.email }}</a>
           </li>
           <li>
             <a
-              :href="`tel:${contact.phone.replace(/[^+\d]/g, '')}`"
+              :href="tel(settings.contact.phone)"
               class="text-text-inverse hover:text-text-inverse"
-            >{{ contact.phone }}</a>
+            >{{ settings.contact.phone }}</a>
           </li>
           <li>
             <address class="not-italic">
-              {{ contact.address }}
+              {{ settings.address.street }}<br>
+              {{ settings.address.city }} – {{ settings.address.region }}
             </address>
           </li>
+          <li>{{ settings.officeHours }}</li>
         </ul>
       </div>
 
@@ -61,7 +68,7 @@ const consentOpen = () => {
         </h2>
         <ul class="flex gap-2">
           <li
-            v-for="s in theme.socials"
+            v-for="s in settings?.socials ?? theme.socials"
             :key="s.url"
           >
             <a

@@ -5,6 +5,8 @@
  */
 export type IconName = 'menu' | 'close' | 'search' | 'arrow-right' | 'phone' | 'mail' | 'pin' | 'clock'
   | 'whatsapp' | 'linkedin' | 'instagram' | 'facebook' | 'youtube' | 'x' | 'globe' | 'play'
+  | 'briefcase' | 'file' | 'users' | 'landmark' | 'home' | 'shield' | 'scale' | 'chevron-left' | 'chevron-right'
+  | 'calendar' | 'link' | 'check' | 'alert' | 'pause'
 
 const props = withDefaults(defineProps<{
   name: IconName
@@ -30,8 +32,22 @@ const paths: Record<IconName, string> = {
   'x': 'M4 4l16 16M20 4 4 20',
   'globe': 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z',
   'play': 'M8 5v14l11-7z',
+  'briefcase': 'M4 7h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2zm12 0V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2M2 13h20',
+  'file': 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm0 0v6h6M8 13h8M8 17h8',
+  'users': 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm13 10v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8',
+  'landmark': 'M3 22h18M6 18v-7m4 7v-7m4 7v-7m4 7v-7M12 2l9 5H3z',
+  'home': 'M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
+  'shield': 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z',
+  'scale': 'M12 3v18M5 21h14M3 7h18M6 7l-3 7a3 3 0 0 0 6 0zm12 0-3 7a3 3 0 0 0 6 0z',
+  'chevron-left': 'M15 18l-6-6 6-6',
+  'chevron-right': 'M9 18l6-6-6-6',
+  'calendar': 'M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm11-2v4M8 2v4M3 10h18',
+  'link': 'M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7',
+  'check': 'M20 6 9 17l-5-5',
+  'pause': 'M7 4h3v16H7zm7 0h3v16h-3z',
+  'alert': 'M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z',
 }
-const d = computed(() => paths[props.name])
+const d = computed(() => paths[props.name] ?? paths.scale)
 </script>
 
 <template>

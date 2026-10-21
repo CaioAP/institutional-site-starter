@@ -1,14 +1,14 @@
 <script setup lang="ts">
 const { t } = useI18n()
-const title = computed(() => t('nav.search'))
-useHead({ title })
+const page = await useContentOr404('page-search', (src, locale) => src.getPage('search', locale))
+usePageSeo(() => ({ ...page.value.seo, title: page.value.seo.title ?? page.value.title }))
 </script>
 
 <template>
   <div>
-    <SectionsPageIntro :title="title" />
-    <div class="container-content py-12">
-      <p>{{ t('placeholder.comingSoon') }}</p>
+    <SectionsPageIntro :title="page.title" />
+    <div class="container-content py-14">
+      <p>{{ t('search.soon') }}</p>
     </div>
   </div>
 </template>

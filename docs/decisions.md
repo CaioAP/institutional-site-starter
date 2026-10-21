@@ -140,3 +140,40 @@ people, no third-party assets). The sample video embed points to *Big Buck
 Bunny* on YouTube (Blender Foundation, CC BY 3.0) and is labelled as such.
 The hero supports a muted video with a poster, but the sample uses an image
 only, so the starter ships no video file.
+
+## Milestone 3 – Pages (2026-10-21)
+
+### Language switcher links are resolved after the page renders
+
+During SSR the header renders before the page has loaded its content, so it
+can't know a post's translated slug yet. Pages register their translations with
+`useAlternates()`; the switcher emits a placeholder during SSR and
+`server/plugins/alternate-links.ts` swaps in the real link (or the localized
+listing when there is no translation) once the page has rendered. On the client
+the state is hydrated from the payload, so there's no mismatch. `setI18nParams`
+is called too, so @nuxtjs/i18n's own `hreflang` links use translated slugs.
+
+### `app/components/content/` is reserved
+
+Nuxt Content registers everything in `components/content/` as global MDC
+components without a prefix. The RichText renderer lives in
+`components/rich-text/` instead.
+
+### Image sizes need an `xs` screen
+
+@nuxt/image 2 treats a bare size (`sizes="100vw"`) as a 1px screen and
+generates 1px variants. The config adds `xs: 320` and components write
+mobile-first sizes (`xs:100vw md:50vw`). Every `<NuxtImg>` requests WebP.
+
+### Lite video embed shows no third-party thumbnail
+
+Fetching the YouTube thumbnail would contact Google before consent, so the
+embed shows a local poster with the video title. The iframe (YouTube on
+`youtube-nocookie.com`, Vimeo with `dnt=1`) loads only on click and receives
+focus.
+
+### `v-reveal` is in place early
+
+The pages use `v-reveal`, so the directive landed here: content is visible in
+the server HTML, only elements below the fold are hidden on the client, and
+`prefers-reduced-motion` disables it. The features milestone adds tests.

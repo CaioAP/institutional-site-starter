@@ -1,9 +1,11 @@
 <script setup lang="ts">
-// Blog listing, page N — implemented with the pages milestone.
-const { t } = useI18n()
-useHead({ title: () => t('nav.blog') })
+const route = useRoute()
+const category = String(route.params.category)
 </script>
 
 <template>
-  <SectionsPageIntro :title="t('nav.blog')" />
+  <BlogListing
+    :page="1"
+    :category="category"
+  />
 </template>
