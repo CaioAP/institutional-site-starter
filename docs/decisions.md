@@ -73,3 +73,70 @@ the skip link stays the first tab stop.
 axe's `label-content-name-mismatch` (WCAG 2.5.3) flagged a visible "EN" with an
 `aria-label` of "View this page in English". The switcher now shows the
 language name as visible text, marked with `lang` and `hreflang`.
+
+## Milestone 2 – Content layer (2026-10-21)
+
+### Versions
+
+| Package | Version | Notes |
+| --- | --- | --- |
+| @nuxt/content | 3.16.2 | SQLite via Node's built-in `node:sqlite` (`experimental.sqliteConnector: 'native'`), no native build step |
+| @nuxt/image | 2.2.0 | installed now, used from the pages milestone |
+
+### Adapters are framework-free
+
+`lib/content/` has no Nuxt imports. The local adapter receives a `LocalStore`
+(`all(collection, locale)`), which the app implements with `queryCollection`
+and tests implement with in-memory fixtures. That keeps the adapter fully
+unit-testable and lets the Sanity adapter plug into the same interface.
+
+Collections are small for institutional sites, so the adapter loads a whole
+collection per locale once (memoized) and filters, sorts and paginates in
+JavaScript. If a client ever has thousands of posts, push filtering into
+`LocalStore`.
+
+### Rich text is a normalized AST, not HTML
+
+Adapters convert their native format (Nuxt Content minimark, later Sanity
+Portable Text) into `RichText` (`lib/content/types.ts`): whitelisted elements,
+plus `image` and `video` nodes. No `v-html`, so nothing to sanitize at render
+time. `h1` in content is demoted to `h2` to keep one `h1` per page. Unsafe
+links (`javascript:`, `data:`) are dropped.
+
+### Translations are linked with `translationKey`
+
+Each localized file has the same `translationKey` in every locale; the slug is
+the file name. References (post author and category, area team, member areas)
+also use `translationKey`, so they don't break when a slug is translated.
+
+### `listRoutes()` is the only prerender source
+
+`nitro.prerender.crawlLinks` is off. While `/` is prerendered,
+`app/plugins/prerender-routes.server.ts` sends every path from
+`listRoutes()` to Nitro through `prerenderRoutes()`. A route missing from
+`listRoutes()` is therefore missing from the build, which the e2e suite catches.
+
+### Additions to the spec's interface
+
+- `getPage(key, locale)` takes a stable page key (`home`, `about`, `contact`,
+  `search`, `privacy`, `terms`) instead of a slug, because page slugs are
+  translated in `i18n/routes.ts`.
+- `listCategories(locale)` feeds the blog's category filter and category routes.
+- `listPosts` accepts `perPage` (used by `listRoutes`).
+- Summaries (`PostSummary`, `PracticeAreaSummary`, `TeamMemberSummary`) carry
+  `translations` so listings and the sitemap can build alternates without
+  fetching every detail document.
+
+### Post excerpt field is `description`
+
+Nuxt Content's `page` collections reserve `excerpt` (it is filled from a
+`<!--more-->` marker and overwrote our frontmatter with `null`). Posts use
+`description` in frontmatter; the domain model still calls it `excerpt`.
+
+### Sample media
+
+All images in `public/images/` are generated abstract compositions (no
+people, no third-party assets). The sample video embed points to *Big Buck
+Bunny* on YouTube (Blender Foundation, CC BY 3.0) and is labelled as such.
+The hero supports a muted video with a poster, but the sample uses an image
+only, so the starter ships no video file.
