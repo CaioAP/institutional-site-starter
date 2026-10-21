@@ -38,3 +38,12 @@ test('the CSP blocks scripts from hosts it does not list', async ({ page }) => {
   })
   await expect.poll(() => violations.length).toBeGreaterThan(0)
 })
+
+test('a broken image does not trip the CSP (Nuxt Image renders an inline onerror)', async ({ page }) => {
+  const violations: string[] = []
+  page.on('console', msg => /Content Security Policy/i.test(msg.text()) && violations.push(msg.text()))
+  await page.route('**/_ipx/**', route => route.abort())
+  await page.goto('/')
+  await expect.poll(() => page.locator('img[data-error]').count()).toBeGreaterThan(0)
+  expect(violations).toEqual([])
+})

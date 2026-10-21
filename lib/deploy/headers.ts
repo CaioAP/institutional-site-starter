@@ -21,12 +21,16 @@ const origin = (url: string) => {
 /**
  * @param scriptHashes sha256 hashes ("sha256-…") of every inline script in the
  *   generated HTML (Nuxt's config and import map, the consent head script).
+ * @param handlerHashes sha256 hashes of inline event handler attributes. Nuxt
+ *   Image renders `onerror="this.setAttribute('data-error', 1)"` on every
+ *   server-rendered image; `'unsafe-hashes'` allows exactly those handlers.
  */
-export function contentSecurityPolicy(env: BuildEnv, scriptHashes: string[]): string {
+export function contentSecurityPolicy(env: BuildEnv, scriptHashes: string[], handlerHashes: string[] = []): string {
+  const hashes = [...new Set([...scriptHashes, ...handlerHashes])].sort().map(h => `'${h}'`)
   const d: Directives = {
     'default-src': ['\'self\''],
     // Pagefind runs its search index as WebAssembly.
-    'script-src': ['\'self\'', '\'wasm-unsafe-eval\'', ...[...new Set(scriptHashes)].sort().map(h => `'${h}'`)],
+    'script-src': ['\'self\'', '\'wasm-unsafe-eval\'', ...(handlerHashes.length ? ['\'unsafe-hashes\''] : []), ...hashes],
     // Vue binds a few inline style attributes; styles can't run code.
     'style-src': ['\'self\'', '\'unsafe-inline\''],
     'img-src': ['\'self\'', 'data:'],
@@ -71,9 +75,9 @@ export interface HeaderRule {
   headers: Record<string, string>
 }
 
-export function headerRules(env: BuildEnv, scriptHashes: string[]): HeaderRule[] {
+export function headerRules(env: BuildEnv, scriptHashes: string[], handlerHashes: string[] = []): HeaderRule[] {
   const security: Record<string, string> = {
-    'Content-Security-Policy': contentSecurityPolicy(env, scriptHashes),
+    'Content-Security-Policy': contentSecurityPolicy(env, scriptHashes, handlerHashes),
     'X-Content-Type-Options': 'nosniff',
     'X-Frame-Options': 'DENY',
     'Referrer-Policy': 'strict-origin-when-cross-origin',

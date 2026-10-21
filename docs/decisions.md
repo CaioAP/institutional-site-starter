@@ -382,6 +382,14 @@ Pagefind. Hosts for the form endpoint and analytics are added only when the
 build env enables them; video embeds allow youtube-nocookie.com and
 player.vimeo.com frames.
 
+Nuxt Image 2.2 renders `onerror="this.setAttribute('data-error', 1)"` on
+every server-rendered image, so it can tell after hydration that an image
+failed before Vue loaded. Inline event handlers can't be allowed by hash
+alone: `postgenerate` hashes every `on*=""` attribute in the output and adds
+`'unsafe-hashes'` with those hashes. That allows exactly this handler, and
+any other inline handler is still blocked. The alternative, stripping the
+attribute, would silently break Nuxt Image's error detection.
+
 The local static server applies the generated `_headers`, and the shared
 Playwright fixture fails any test that logs a CSP violation. So the e2e suite
 (search, embeds, Plausible, the endpoint form) proves the policy is complete,

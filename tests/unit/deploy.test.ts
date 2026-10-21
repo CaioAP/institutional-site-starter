@@ -34,6 +34,11 @@ describe('content security policy', () => {
     expect(directive(csp, 'form-action')).toBe('form-action \'self\'')
   })
 
+  it('allows inline event handlers by hash only when the HTML has some', () => {
+    const csp = contentSecurityPolicy(readBuildEnv({}), ['sha256-abc'], ['sha256-def'])
+    expect(directive(csp, 'script-src')).toBe('script-src \'self\' \'wasm-unsafe-eval\' \'unsafe-hashes\' \'sha256-abc\' \'sha256-def\'')
+  })
+
   it('adds the form endpoint and the analytics hosts only when configured', () => {
     const plausible = contentSecurityPolicy(readBuildEnv({
       FORM_PROVIDER: 'endpoint',
