@@ -18,8 +18,9 @@
     line-height: 1.2;
   }
 
+  /* Links are underlined by default so they never rely on color alone (WCAG 1.4.1). */
   a {
-    @apply text-accent underline-offset-4;
+    @apply text-accent underline underline-offset-4;
   }
 
   a:hover {

@@ -33,6 +33,7 @@ useHead({
 <template>
   <nav
     :aria-label="t('a11y.breadcrumb')"
+    data-pagefind-ignore
     class="mb-6 text-sm"
   >
     <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-text-muted">

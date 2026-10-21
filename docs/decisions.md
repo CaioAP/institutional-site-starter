@@ -177,3 +177,68 @@ focus.
 The pages use `v-reveal`, so the directive landed here: content is visible in
 the server HTML, only elements below the fold are hidden on the client, and
 `prefers-reduced-motion` disables it. The features milestone adds tests.
+
+## Milestone 4 – Features (2026-10-21)
+
+### Versions
+
+| Package | Version | Notes |
+| --- | --- | --- |
+| pagefind | 1.5.2 | Node API, run from `scripts/postgenerate.ts` |
+
+### Search
+
+Pagefind runs after `nuxt generate` and writes one index per `<html lang>`
+(`pt-br`, `en`), so the browser only loads and searches the current
+locale's index. Only detail pages, About and the legal pages are indexed
+(`data-pagefind-body`); listings, search and 404 are not. Each indexed page
+carries `data-pagefind-meta="type:page|area|team|post"` and the UI labels
+results from it. Breadcrumbs, share links, related posts and CTAs are marked
+`data-pagefind-ignore`.
+
+The UI uses Pagefind's JS API (not its default UI) so it matches the design
+system and accessibility patterns: a native `<dialog>` (Esc, focus return and
+inert background for free), `/` shortcut, a `role="status"` result count, and
+a full results page that keeps `?q=` in the URL. Excerpts are parsed into
+text parts instead of rendered with `v-html`. In `pnpm dev` there is no index;
+the UI says so.
+
+### Contact form
+
+`lib/forms/contact.ts` holds validation and the provider adapters
+(`FORM_PROVIDER=netlify` posts urlencoded data with `form-name`;
+`FORM_PROVIDER=endpoint` posts JSON to `FORM_ENDPOINT`, e.g. Formspree or a
+Worker). The rendered `<form>` carries `data-netlify` + `netlify-honeypot` so
+Netlify detects it in the static HTML. Validation runs on submit, then live as
+fields are fixed; the first invalid field receives focus and the count is
+announced. Honeypot submissions show success without sending anything.
+
+### Consent and analytics
+
+Banner with Reject / Accept (same size and style) and Customize; choices are
+versioned in `localStorage` and reopened from the footer. Analytics
+(`ANALYTICS_PROVIDER=ga4|plausible`, `ANALYTICS_ID`) is injected by a client
+plugin only after consent; nothing analytics-related is in the static HTML.
+Revoking consent clears GA cookies and reloads, because a running script can't
+be unloaded. Plausible is cookieless and could arguably run without consent;
+the spec asks for consent first, so it is gated too.
+
+The banner isn't modal (the site stays usable) and hides the WhatsApp button
+while it's open so they never overlap.
+
+### WhatsApp button
+
+Uses SiteSettings' WhatsApp number; hidden when the number is empty or
+`WHATSAPP_BUTTON=false`. Its green is WhatsApp's brand color, not a theme
+token, and passes contrast with white.
+
+### Links are underlined by default
+
+axe's `link-in-text-block` flagged a link inside the consent label. Links are
+now underlined globally; navigation and cards opt out with `no-underline`.
+
+### Test build
+
+E2E needs analytics and the endpoint form enabled, so CI runs
+`pnpm generate:test` (sets `ANALYTICS_PROVIDER=plausible`,
+`FORM_PROVIDER=endpoint` with a fake endpoint the tests intercept).

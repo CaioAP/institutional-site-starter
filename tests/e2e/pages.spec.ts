@@ -62,7 +62,8 @@ test('post page shows reading time, author, related posts and a click-to-load vi
 
 test('no broken internal links (every linked page was prerendered)', async ({ request }) => {
   const seen = new Set<string>()
-  const queue = ['/', '/en']
+  // Search pages are reached through the search dialog, not a link.
+  const queue = ['/', '/en', '/busca', '/en/search']
   while (queue.length) {
     const path = queue.shift()!
     if (seen.has(path)) continue

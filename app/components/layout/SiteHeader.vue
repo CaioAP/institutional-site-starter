@@ -10,6 +10,7 @@ const panel = ref<HTMLElement | null>(null)
 const route = useRoute()
 
 useFocusTrap(panel, menuOpen, () => (menuOpen.value = false))
+const openSearch = () => window.dispatchEvent(new CustomEvent('search:open'))
 watch(() => route.fullPath, () => (menuOpen.value = false))
 </script>
 
@@ -50,16 +51,18 @@ watch(() => route.fullPath, () => (menuOpen.value = false))
       </nav>
 
       <div class="flex items-center gap-1">
-        <NuxtLink
-          :to="localePath({ name: 'search' })"
+        <button
+          type="button"
           class="inline-flex size-11 items-center justify-center rounded-md text-text hover:text-accent"
-          data-search-trigger
+          aria-haspopup="dialog"
+          aria-keyshortcuts="/"
+          @click="openSearch"
         >
           <UiIcon
             name="search"
             :label="t('nav.search')"
           />
-        </NuxtLink>
+        </button>
         <LayoutLanguageSwitcher class="hidden sm:flex" />
         <button
           type="button"
@@ -120,5 +123,6 @@ watch(() => route.fullPath, () => (menuOpen.value = false))
       </nav>
       <LayoutLanguageSwitcher />
     </div>
+    <SearchDialog />
   </header>
 </template>

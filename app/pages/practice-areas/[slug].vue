@@ -10,7 +10,11 @@ usePageSeo(() => area.value.seo)
 </script>
 
 <template>
-  <div>
+  <div
+    data-pagefind-body
+    data-pagefind-meta="type:area"
+    data-pagefind-filter="type:area"
+  >
     <SectionsPageIntro
       :title="area.title"
       :lead="area.summary"
@@ -23,6 +27,7 @@ usePageSeo(() => area.value.seo)
     <section
       v-if="area.team.length"
       class="bg-surface-muted py-14"
+      data-pagefind-ignore
       aria-labelledby="area-team"
     >
       <div class="container-content">
@@ -42,6 +47,7 @@ usePageSeo(() => area.value.seo)
     </section>
 
     <SectionsCtaBand
+      data-pagefind-ignore
       :section="{
         type: 'cta',
         heading: t('areas.cta', { area: area.title }),

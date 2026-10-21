@@ -10,7 +10,11 @@ usePageSeo(() => ({ ...member.value.seo, image: member.value.seo.image ?? member
 </script>
 
 <template>
-  <div>
+  <div
+    data-pagefind-body
+    data-pagefind-meta="type:team"
+    data-pagefind-filter="type:team"
+  >
     <div class="border-b border-border/30 bg-surface-muted">
       <div class="container-content grid gap-10 py-12 md:grid-cols-[18rem_1fr] md:py-16">
         <div class="md:order-2">
