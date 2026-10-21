@@ -56,6 +56,7 @@ describe('_headers file', () => {
     const rules = parseHeadersFile(formatHeadersFile(headerRules(readBuildEnv({}), ['sha256-abc'])))
     expect(headersFor(rules, '/en/blog')['X-Frame-Options']).toBe('DENY')
     expect(headersFor(rules, '/_nuxt/entry.js')['Cache-Control']).toContain('immutable')
+    expect(headersFor(rules, '/fonts/inter/inter-latin-wght-normal.woff2')['Cache-Control']).toBe('public, max-age=2592000')
     expect(headersFor(rules, '/en/blog')['Cache-Control']).toBeUndefined()
   })
 

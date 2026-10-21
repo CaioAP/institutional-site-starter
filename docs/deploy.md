@@ -54,8 +54,8 @@ apply:
   YouTube (privacy-enhanced) and Vimeo frames are allowed for video embeds.
 - `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`,
   `Permissions-Policy`, HSTS and `Cross-Origin-Opener-Policy`.
-- Long-lived caching for hashed assets in `/_nuxt/`, one week for resized
-  images in `/_ipx/`.
+- Long-lived caching for hashed assets in `/_nuxt/`, 30 days for fonts in
+  `/fonts/`, one week for resized images in `/_ipx/`.
 
 Adding a third-party script or embed means adding its host in
 `lib/deploy/headers.ts`. The e2e suite runs under the generated CSP and fails

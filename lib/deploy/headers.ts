@@ -87,6 +87,8 @@ export function headerRules(env: BuildEnv, scriptHashes: string[]): HeaderRule[]
     { path: '/*', headers: security },
     // Content-hashed build assets never change.
     { path: '/_nuxt/*', headers: { 'Cache-Control': 'public, max-age=31536000, immutable' } },
+    // Font file names don't change when the package is upgraded: 30 days.
+    { path: '/fonts/*', headers: { 'Cache-Control': 'public, max-age=2592000' } },
     // Image variants keep their URL when the source image is replaced, so
     // they're cached for a week, not forever.
     { path: '/_ipx/*', headers: { 'Cache-Control': 'public, max-age=604800' } },
