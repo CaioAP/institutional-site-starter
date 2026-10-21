@@ -18,6 +18,7 @@ defineProps<{ sections: PageSection[], heroIsTitle?: boolean }>()
     <SectionsTextBlock
       v-else-if="section.type === 'text'"
       :section="section"
+      :priority="i === 0"
     />
     <SectionsHighlights
       v-else-if="section.type === 'highlights'"

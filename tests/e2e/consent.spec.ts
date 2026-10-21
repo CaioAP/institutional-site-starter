@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page } from '../support/test'
 
 /** The test build uses ANALYTICS_PROVIDER=plausible (pnpm generate:test). */
 function trackAnalytics(page: Page) {
@@ -65,4 +65,29 @@ test('customize opens preferences with analytics off by default', async ({ page 
   await expect(dialog).toBeHidden()
   await expect(page.locator('[data-consent-banner]')).toHaveCount(0)
   expect(hits).toEqual([])
+})
+
+test('the banner is in the static HTML: no late pop-in, no flash for returning visitors', async ({ browser }) => {
+  // First visit, before any JavaScript ran: the head script already shows it.
+  const fresh = await browser.newPage()
+  await fresh.route(/\/_nuxt\/.*\.js$/, route => route.abort())
+  await fresh.goto('/')
+  await expect(fresh.locator('[data-consent-banner]')).toBeVisible()
+  await fresh.close()
+
+  // Returning visitor: hidden from the first paint, even before hydration.
+  const returning = await browser.newPage()
+  await returning.addInitScript(() => localStorage.setItem('site-consent', JSON.stringify({ version: 1, analytics: false, decidedAt: '2026-01-01T00:00:00.000Z' })))
+  await returning.route(/\/_nuxt\/.*\.js$/, route => route.abort())
+  await returning.goto('/')
+  await expect(returning.locator('[data-consent-banner]')).toBeHidden()
+  await returning.close()
+})
+
+test('without JavaScript the banner stays hidden (its buttons could not work)', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false })
+  const page = await context.newPage()
+  await page.goto('/')
+  await expect(page.locator('[data-consent-banner]')).toBeHidden()
+  await context.close()
 })

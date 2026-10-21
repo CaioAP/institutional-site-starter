@@ -109,3 +109,9 @@
     }
   }
 }
+
+/* Consent banner: rendered in the static HTML, shown only when the inline head
+   script marks the decision as pending (see components/consent/Banner.vue). */
+html:not([data-consent="pending"]) [data-consent-banner] {
+  display: none;
+}

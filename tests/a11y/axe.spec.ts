@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright'
-import { expect, test } from '@playwright/test'
+import { expect, test } from '../support/test'
 import { allDetailUrls, allStaticUrls } from '../support/routes'
 
 const urls = [...allStaticUrls, ...allDetailUrls, '/pagina-que-nao-existe', '/en/missing-page']

@@ -242,3 +242,187 @@ now underlined globally; navigation and cards opt out with `no-underline`.
 E2E needs analytics and the endpoint form enabled, so CI runs
 `pnpm generate:test` (sets `ANALYTICS_PROVIDER=plausible`,
 `FORM_PROVIDER=endpoint` with a fake endpoint the tests intercept).
+
+## Milestone 5 – SEO and performance (2026-10-21)
+
+### Versions
+
+| Package | Version | Notes |
+| --- | --- | --- |
+| @nuxtjs/sitemap | 9.1.0 | Pulls in nuxt-site-config 5.0.3 |
+| @nuxtjs/robots | 7.0.2 | Replaces `public/robots.txt` |
+| nuxt-schema-org | 7.0.1 | JSON-LD graph |
+| @lhci/cli | 0.15.1 | Latest release; bundles Lighthouse 12 (Lighthouse 13 has no LHCI release yet) |
+
+`pnpm install` prints an unmet optional peer warning (`zod@^4.6.5`, from the
+Nuxt SEO packages) because Nuxt Content still ships zod 3. Nothing uses the
+zod 4 code path; revisit when Nuxt Content moves to zod 4.
+
+### One site URL
+
+`NUXT_PUBLIC_SITE_URL` feeds canonical links, hreflang, the sitemap, robots and
+OG images. It defaults to `https://www.example.com` (not localhost) so a build
+without env vars still produces valid absolute URLs. Set it per deployment.
+
+### Sitemap from `listRoutes()`
+
+The sitemap ignores Nuxt's route scan (`excludeAppSources`) and reads
+`server/api/__sitemap__/urls.ts`, which calls the same
+`ContentSource.listRoutes()` used for prerendering. So the sitemap, the
+prerendered pages and the content can't drift apart. It is split per locale
+(`/__sitemap__/pt-BR.xml`, `/__sitemap__/en.xml`, plus `sitemap_index.xml`),
+each URL with hreflang alternates and `x-default` → pt-BR. Search and 404 are
+excluded and carry `noindex`.
+
+### hreflang only for translations that exist
+
+By default @nuxtjs/i18n emits an hreflang link for every locale, even when a
+post has no English version (the link would point to a 404). Its
+`experimental.strictSeo` mode drops alternates for locales missing from
+`setI18nParams`, which `useAlternates()` already fills from `translations`.
+Checked with a temporary pt-only post: the page and the sitemap both list only
+pt-BR + x-default. Strict mode also means i18n manages `<html lang>`,
+canonical and `og:locale` itself, so `useLocaleHead()` is no longer called.
+
+i18n also emits a bare `hreflang="pt"` next to `pt-BR`; that is valid and was
+left as is. The home canonical is `https://www.example.com` (no trailing
+slash) while the sitemap says `.../`; both are the same URL.
+
+The e2e test `tests/e2e/seo.spec.ts` reads every URL in both sitemaps and
+checks it against the page's own canonical, hreflang, OG tags and JSON-LD.
+
+### Structured data
+
+One JSON-LD graph per page via nuxt-schema-org:
+
+- Identity: a `LegalService` built from SiteSettings in the default layout (the
+  firm's real name, contact details, address and socials live in content, so
+  the config-level `identity` option is not used). WebSite, WebPage and Article
+  link to it as publisher.
+- Team member pages: `ProfilePage` whose main entity is a `Person` working for
+  the firm.
+- Posts: `BlogPosting` with author, dates, section and keywords.
+- Breadcrumbs: `defineBreadcrumb` (the M3 hand-written JSON-LD would have
+  produced a second, unlinked graph).
+
+### Social images
+
+Default `og:image` comes from `settings.seo.image`; posts use their cover, team
+pages the photo. Local images are cropped to 1200×630 JPEG through
+@nuxt/image (sharp's `attention` crop, which keeps faces in portraits), and
+the variants are written to `.output/public/_ipx/` during generate. A source
+smaller than 1200px wide yields a smaller crop with the same ratio and the
+reported size matches. Absolute URLs (a CMS CDN) are used as they are.
+
+### Performance changes
+
+The first Lighthouse run (mobile, simulated throttling) scored 70–73. Fixes:
+
+- The test static server now compresses text (brotli/gzip) as any CDN does;
+  without it Lighthouse measured 300 KB of uncompressed JS.
+- The consent banner used to appear after hydration, so on text-led pages it
+  became the LCP element at ~3 s. It is now in the static HTML, hidden by CSS
+  unless a 300-byte inline head script finds no stored decision. It paints
+  with the page, never flashes for returning visitors, and stays hidden
+  without JavaScript.
+- Likely LCP images get `fetchpriority="high"` and a high-priority preload: the
+  hero, post cover, team photo, the first card of the blog and team listings,
+  and the first image of a page whose first section is text.
+- Markdown body images take `{width="…" height="…"}` (documented in
+  `content/README.md`), which removed a 0.07 CLS on the About page.
+
+- Fonts: CI's Chrome (on a runner whose fallback fonts differ a lot from
+  Inter) measured CLS 0.14 on the contact page when the web fonts swapped in.
+  The theme module now serves the Fontsource files from `/fonts/<name>/`,
+  preloads the latin subset of both families, and switches them to
+  `font-display: optional`. With the preload the fonts are there for the
+  first paint; when they aren't, the fallback stays for that view instead of
+  shifting the text. Only the files the CSS references are shipped (≈420 KB
+  in total, of which a page loads two ≈50 KB files).
+
+Result: performance 95–100 on the nine audited pages (median of three runs),
+accessibility 100, best practices 100, SEO 100, LCP ≈1.5–1.8 s, CLS 0.
+
+### Lighthouse CI
+
+`lighthouserc.cjs` holds the spec budgets (Perf ≥ 0.9, A11y = 1, BP ≥ 0.95,
+SEO = 1, LCP < 2.5 s, CLS < 0.1) for a representative set of pages: home in
+both locales, about, a practice area, a team member, blog index, a post in
+both locales and contact. It serves the generated site with the same static
+server as Playwright and keeps reports as a CI artifact (no LHCI server or
+token needed). CI builds with the default env, i.e. what a fresh deployment
+ships.
+
+### Hydration in e2e tests
+
+Since the banner is now clickable before Vue hydrates, tests could click it
+too early. A client plugin sets `<html data-hydrated>` after hydration and
+`tests/support/test.ts` makes `page.goto` wait for it.
+
+## Milestone 6 – Deploy (2026-10-21)
+
+No new dependencies.
+
+### One `_headers` file for both hosts
+
+Cloudflare Pages and Netlify both read `_headers` from the output directory,
+so headers are generated once by `scripts/postgenerate.ts` from
+`lib/deploy/headers.ts` instead of being written twice (and drifting) in
+`netlify.toml` and a Cloudflare file. The spec asks for headers in
+`netlify.toml`; this is the same result from a single source.
+
+### CSP with hashes, not `'unsafe-inline'`
+
+Nuxt's static output has a few inline scripts (runtime config, import map,
+the consent head script). Their sha256 hashes are collected from the
+generated HTML at build time, so `script-src` needs no `'unsafe-inline'`.
+`style-src` keeps `'unsafe-inline'` because Vue binds inline `style`
+attributes; styles can't execute code. `'wasm-unsafe-eval'` is needed by
+Pagefind. Hosts for the form endpoint and analytics are added only when the
+build env enables them; video embeds allow youtube-nocookie.com and
+player.vimeo.com frames.
+
+Nuxt Image 2.2 renders `onerror="this.setAttribute('data-error', 1)"` on
+every server-rendered image, so it can tell after hydration that an image
+failed before Vue loaded. Inline event handlers can't be allowed by hash
+alone: `postgenerate` hashes every `on*=""` attribute in the output and adds
+`'unsafe-hashes'` with those hashes. That allows exactly this handler, and
+any other inline handler is still blocked. The alternative, stripping the
+attribute, would silently break Nuxt Image's error detection.
+
+The local static server applies the generated `_headers`, and the shared
+Playwright fixture fails any test that logs a CSP violation. So the e2e suite
+(search, embeds, Plausible, the endpoint form) proves the policy is complete,
+and a new third-party script without a CSP entry fails CI.
+
+### Flat `.html` files (no trailing-slash redirects)
+
+With `/sobre/index.html`, Cloudflare Pages redirects `/sobre` to `/sobre/`,
+so every canonical URL (no trailing slash) would point at a redirect. Nitro's
+`prerender.autoSubfolderIndex: false` writes `/sobre.html`, which both hosts
+serve at `/sobre` directly. The localized 404 pages now land at `404.html`
+and `en/404.html` without the copy step. Pagefind result URLs drop `.html`.
+`nitro.preset: 'static'` is pinned so neither host's auto-detected preset
+changes the output layout.
+
+### Previews are noindex
+
+`lib/deploy/env.ts` treats Cloudflare branch builds and Netlify deploy
+previews and branch deploys as previews. Site config then sets
+`indexable: false`: `robots.txt` disallows everything, pages get
+`noindex, nofollow`, and `_headers` adds `X-Robots-Tag: noindex`.
+`NUXT_SITE_ENV` overrides the detection. Verified with
+`CF_PAGES_BRANCH=feature-x pnpm generate`.
+
+### One source for build env
+
+`readBuildEnv()` holds every variable and default. `nuxt.config.ts` and
+`postgenerate` both use it, so the CSP always matches what the pages load.
+Unit tests check that the defaults build with no env vars at all, and CI's
+Lighthouse job builds that way and checks the output files.
+
+### Build hooks
+
+Documented in `docs/deploy.md` (Cloudflare deploy hooks, Netlify build hooks,
+and a Sanity webhook pointing at one). No account was created and no hook URL
+is in the repo.

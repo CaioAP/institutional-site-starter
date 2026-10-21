@@ -69,9 +69,9 @@ export function parseExcerpt(html: string): ExcerptPart[] {
     .parts
 }
 
-/** "/en/blog/x/" or "/en/blog/x/index.html" → "/en/blog/x" */
+/** "/en/blog/x.html", "/en/blog/x/" or "/en/blog/x/index.html" → "/en/blog/x" */
 export function cleanUrl(url: string) {
-  const u = url.replace(/index\.html$/, '').replace(/\/$/, '')
+  const u = url.replace(/index\.html$/, '').replace(/\.html$/, '').replace(/\/$/, '')
   return u || '/'
 }
 

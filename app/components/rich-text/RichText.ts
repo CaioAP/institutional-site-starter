@@ -11,7 +11,7 @@ import VideoEmbed from './VideoEmbed.vue'
 // NuxtImg is a generic component; its inferred type doesn't fit h()'s overloads.
 const Img = NuxtImg as Component
 
-function render(node: RichTextNode, key: number): VNodeChild {
+function render(node: RichTextNode, key: number, priority = false): VNodeChild {
   switch (node.type) {
     case 'text':
       return node.value
@@ -23,7 +23,10 @@ function render(node: RichTextNode, key: number): VNodeChild {
           width: node.image.width,
           height: node.image.height,
           sizes: 'xs:100vw sm:100vw md:768px',
-          loading: 'lazy',
+          // A priority image may be the page's LCP element: load it right away.
+          ...(priority
+            ? { loading: 'eager', fetchpriority: 'high', preload: { fetchPriority: 'high' } }
+            : { loading: 'lazy' }),
           format: 'webp',
           class: 'h-auto w-full rounded-lg',
         }),
@@ -32,7 +35,7 @@ function render(node: RichTextNode, key: number): VNodeChild {
     case 'video':
       return h(VideoEmbed, { key, provider: node.provider, id: node.id, title: node.title, caption: node.caption })
     case 'element': {
-      const children = () => node.children.map(render)
+      const children = () => node.children.map((child, i) => render(child, i))
       if (node.tag === 'a' && node.attrs?.href) {
         const href = node.attrs.href
         return href.startsWith('/')
@@ -51,8 +54,13 @@ export default defineComponent({
   name: 'RichText',
   props: {
     value: { type: Object as PropType<RichText>, required: true },
+    /** Load the first image eagerly: set when the text opens the page. */
+    priority: { type: Boolean, default: false },
   },
   setup(props) {
-    return () => h('div', { class: 'prose-content' }, props.value.nodes.map(render))
+    return () => {
+      const first = props.priority ? props.value.nodes.findIndex(n => n.type === 'image') : -1
+      return h('div', { class: 'prose-content' }, props.value.nodes.map((n, i) => render(n, i, i === first)))
+    }
   },
 })

@@ -1,0 +1,20 @@
+# Netlify. Security and cache headers come from the generated
+# .output/public/_headers (see lib/deploy/headers.ts), not from this file.
+# Set NUXT_PUBLIC_SITE_URL (and any other .env.example variable) in
+# Site configuration → Environment variables. Guide: docs/deploy.md
+
+[build]
+  command = "pnpm generate"
+  publish = ".output/public"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Netlify only serves the root 404.html on its own; this makes English
+# URLs that don't exist get the English not-found page. Real files win
+# (force = false), so this only applies to missing paths.
+[[redirects]]
+  from = "/en/*"
+  to = "/en/404.html"
+  status = 404
+  force = false

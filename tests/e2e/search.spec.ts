@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from '../support/test'
 import { withConsent } from '../support/consent'
 
 test.beforeEach(({ page }) => withConsent(page))

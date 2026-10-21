@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Breadcrumb trail for detail pages, with schema.org BreadcrumbList JSON-LD.
+ * Breadcrumb trail for detail pages, with a schema.org BreadcrumbList.
  * The last item is the current page (aria-current, not a link).
  */
 import type { Crumb } from '~/types/ui'
@@ -8,26 +8,15 @@ import type { Crumb } from '~/types/ui'
 const props = defineProps<{ items: Crumb[] }>()
 const { t } = useI18n()
 const localePath = useLocalePath()
-const siteUrl = useRuntimeConfig().public.siteUrl.replace(/\/$/, '')
 
 const trail = computed<Crumb[]>(() => [{ label: t('nav.home'), to: localePath('/') }, ...props.items])
 
-useHead({
-  script: [{
-    type: 'application/ld+json',
-    key: 'breadcrumbs',
-    innerHTML: computed(() => JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      'itemListElement': trail.value.map((c, i) => ({
-        '@type': 'ListItem',
-        'position': i + 1,
-        'name': c.label,
-        ...(c.to ? { item: `${siteUrl}${c.to}` } : {}),
-      })),
-    })),
-  }],
-})
+// Linked from the page's WebPage node by nuxt-schema-org.
+useSchemaOrg([
+  defineBreadcrumb({
+    itemListElement: trail.value.map(c => ({ name: c.label, ...(c.to ? { item: c.to } : {}) })),
+  }),
+])
 </script>
 
 <template>

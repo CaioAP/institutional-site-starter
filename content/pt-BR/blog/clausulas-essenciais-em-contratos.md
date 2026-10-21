@@ -20,7 +20,7 @@ Um contrato bem escrito evita conflitos. Estas são as cláusulas que mais geram
 
 Descreva com precisão o que será entregue.
 
-![Ilustração abstrata representando a assinatura de um documento](/images/inline-assinatura.jpg)
+![Ilustração abstrata representando a assinatura de um documento](/images/inline-assinatura.jpg){width="1200" height="800"}
 
 ## Prazo e rescisão
 
@@ -30,7 +30,7 @@ Defina a vigência e as condições para encerrar o contrato antes do prazo.
 
 Indique o índice de reajuste e a periodicidade.
 
-![Ilustração abstrata representando uma reunião de negociação](/images/inline-reuniao.jpg)
+![Ilustração abstrata representando uma reunião de negociação](/images/inline-reuniao.jpg){width="1200" height="800"}
 
 ## Foro
 

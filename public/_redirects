@@ -1,0 +1,8 @@
+# Redirects for Cloudflare Pages and Netlify (same syntax). Add a client's old
+# URLs here when replacing an existing site, e.g.:
+#   /old-page  /sobre  301
+# Portuguese is the default locale and has no prefix; send guessed prefixes home.
+/pt-BR    /         301
+/pt-BR/*  /:splat   301
+/pt       /         301
+/pt/*     /:splat   301

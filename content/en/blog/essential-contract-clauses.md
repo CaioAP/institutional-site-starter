@@ -20,7 +20,7 @@ A well-written contract prevents disputes. These are the clauses that raise the 
 
 Describe precisely what will be delivered.
 
-![Abstract illustration representing a document being signed](/images/inline-assinatura.jpg)
+![Abstract illustration representing a document being signed](/images/inline-assinatura.jpg){width="1200" height="800"}
 
 ## Term and termination
 
@@ -30,7 +30,7 @@ Set the duration and the conditions for ending the agreement early.
 
 State the adjustment index and how often it applies.
 
-![Abstract illustration representing a negotiation meeting](/images/inline-reuniao.jpg)
+![Abstract illustration representing a negotiation meeting](/images/inline-reuniao.jpg){width="1200" height="800"}
 
 ## Jurisdiction
 
