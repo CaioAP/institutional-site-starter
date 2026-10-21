@@ -5,6 +5,7 @@ import type {
 import type { ContentSource } from '~~/lib/content/source'
 import { resolveContentSourceName } from '~~/lib/content/source'
 import { createLocalSource, type LocalCollections, type LocalStore } from '~~/lib/content/adapters/local'
+import { createSanitySource, type SanityFetcher } from '~~/lib/content/adapters/sanity'
 import type { Locale } from '~~/lib/content/types'
 
 /**
@@ -29,13 +30,27 @@ const nuxtContentStore: LocalStore = {
   },
 }
 
+/**
+ * On the server (SSR, prerender) queries go straight to Sanity, or to the
+ * offline seed. In the browser, which only queries during `nuxt dev`, they go
+ * through the dev proxy in server/api/_content/sanity.post.ts.
+ */
+function sanityFetcher(): SanityFetcher {
+  if (import.meta.server) {
+    const config = useRuntimeConfig().sanity
+    const fetcher = import('~~/lib/content/adapters/sanity-fetcher').then(m => m.getSanityFetcher(config))
+    return { fetch: async (query, params) => (await fetcher).fetch(query, params) }
+  }
+  return { fetch: (query, params) => $fetch('/api/_content/sanity', { method: 'POST', body: { query, params } }) as never }
+}
+
 function createSource(): ContentSource {
   const name = resolveContentSourceName(useRuntimeConfig().public.contentSource)
   switch (name) {
     case 'local':
       return createLocalSource(nuxtContentStore)
     case 'sanity':
-      throw new Error('CONTENT_SOURCE=sanity is not available yet (added with the CMS samples).')
+      return createSanitySource(sanityFetcher())
   }
 }
 

@@ -9,6 +9,12 @@ export interface BuildEnv {
   /** production | preview. Previews are noindex. */
   siteEnv: 'production' | 'preview'
   contentSource: string
+  /** Sanity project; empty = offline seed (CONTENT_SOURCE=sanity only). */
+  sanityProjectId: string
+  sanityDataset: string
+  sanityApiVersion: string
+  /** published (default) | drafts – drafts is for local preview only. */
+  sanityPerspective: string
   formProvider: string
   formEndpoint: string
   analyticsProvider: string
@@ -36,6 +42,10 @@ export function readBuildEnv(env: Env = process.env): BuildEnv {
     siteUrl: (env.NUXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, ''),
     siteEnv: detectSiteEnv(env),
     contentSource: env.CONTENT_SOURCE || 'local',
+    sanityProjectId: env.SANITY_PROJECT_ID || '',
+    sanityDataset: env.SANITY_DATASET || 'production',
+    sanityApiVersion: env.SANITY_API_VERSION || '2025-02-19',
+    sanityPerspective: env.SANITY_PERSPECTIVE || 'published',
     formProvider: env.FORM_PROVIDER || 'netlify',
     formEndpoint: env.FORM_ENDPOINT || '',
     analyticsProvider: env.ANALYTICS_PROVIDER || 'none',

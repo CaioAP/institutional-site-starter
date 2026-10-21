@@ -17,6 +17,9 @@ export default defineNuxtConfig({
     '@nuxtjs/sitemap',
     '@nuxtjs/robots',
     'nuxt-schema-org',
+    // Nuxt Studio visual editor, local editing only: `pnpm dev:studio`.
+    // Publishing from production needs an SSR deployment (docs/decisions.md, M7).
+    ...(process.env.STUDIO_EDITOR === 'true' ? ['nuxt-studio'] : []),
   ],
   devtools: { enabled: true },
 
@@ -44,6 +47,15 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    /** Server-only (build time): CONTENT_SOURCE=sanity. See studios/sanity/README.md. */
+    sanity: {
+      projectId: env.sanityProjectId,
+      dataset: env.sanityDataset,
+      apiVersion: env.sanityApiVersion,
+      perspective: env.sanityPerspective,
+      /** Only for private datasets. Never exposed to the browser. */
+      token: process.env.SANITY_API_READ_TOKEN || '',
+    },
     public: {
       siteUrl: SITE_URL,
       /** local | sanity – see lib/content/source.ts */
@@ -107,6 +119,8 @@ export default defineNuxtConfig({
     // `xs` lets components write mobile-first sizes like "xs:100vw md:50vw".
     screens: { 'xs': 320, 'sm': 640, 'md': 768, 'lg': 1024, 'xl': 1280, '2xl': 1536 },
     quality: 80,
+    // Images from the Sanity CDN are optimized and prerendered like local ones.
+    domains: ['cdn.sanity.io'],
   },
 
   robots: {

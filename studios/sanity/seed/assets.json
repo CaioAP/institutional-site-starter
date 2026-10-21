@@ -1,0 +1,50 @@
+{
+  "./public/images/about.jpg": {
+    "width": 1600,
+    "height": 1000
+  },
+  "./public/images/hero.jpg": {
+    "width": 1920,
+    "height": 1080
+  },
+  "./public/images/inline-assinatura.jpg": {
+    "width": 1200,
+    "height": 800
+  },
+  "./public/images/inline-reuniao.jpg": {
+    "width": 1200,
+    "height": 800
+  },
+  "./public/images/og-default.jpg": {
+    "width": 1200,
+    "height": 630
+  },
+  "./public/images/post-contratos.jpg": {
+    "width": 1600,
+    "height": 900
+  },
+  "./public/images/post-lgpd.jpg": {
+    "width": 1600,
+    "height": 900
+  },
+  "./public/images/post-sucessao.jpg": {
+    "width": 1600,
+    "height": 900
+  },
+  "./public/images/post-trabalhista.jpg": {
+    "width": 1600,
+    "height": 900
+  },
+  "./public/images/team-1.jpg": {
+    "width": 800,
+    "height": 1000
+  },
+  "./public/images/team-2.jpg": {
+    "width": 800,
+    "height": 1000
+  },
+  "./public/images/team-3.jpg": {
+    "width": 800,
+    "height": 1000
+  }
+}
