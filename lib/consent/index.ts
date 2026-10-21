@@ -28,3 +28,9 @@ export function parseConsent(raw: string | null | undefined): ConsentChoice | nu
 export function makeConsent(analytics: boolean, now = new Date()): ConsentChoice {
   return { version: CONSENT_VERSION, analytics, decidedAt: now.toISOString() }
 }
+
+/**
+ * Inline <head> script: marks <html data-consent="pending"> before first paint
+ * when there is no valid stored decision. Must mirror parseConsent().
+ */
+export const CONSENT_HEAD_SCRIPT = `try{var c=JSON.parse(localStorage.getItem(${JSON.stringify(CONSENT_STORAGE_KEY)}));if(!c||c.version!==${CONSENT_VERSION}||typeof c.analytics!=='boolean'||typeof c.decidedAt!=='string')throw 0}catch(e){document.documentElement.setAttribute('data-consent','pending')}`

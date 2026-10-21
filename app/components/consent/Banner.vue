@@ -1,20 +1,22 @@
 <script setup lang="ts">
 /**
- * LGPD cookie banner. Shown on the client until the visitor decides; "Reject"
- * is exactly as prominent and as easy as "Accept". Not modal: the page stays
- * usable, and nothing optional loads until a choice is made.
+ * LGPD cookie banner, shown until the visitor decides; "Reject" is exactly as
+ * prominent and as easy as "Accept". Not modal: the page stays usable, and
+ * nothing optional loads until a choice is made.
+ *
+ * The banner is part of the static HTML but hidden by CSS unless a tiny inline
+ * script (CONSENT_HEAD_SCRIPT, added in app.vue) finds no stored decision. So it
+ * paints with the page instead of popping in after hydration (which would make
+ * it a late LCP element), it never flashes for returning visitors, and it stays
+ * hidden without JavaScript, where its buttons couldn't work anyway.
  */
 const { t } = useI18n()
 const localePath = useLocalePath()
-const { choice, loaded, load, acceptAll, rejectAll, preferencesOpen } = useConsent()
-const mounted = ref(false)
+const { choice, load, acceptAll, rejectAll, preferencesOpen } = useConsent()
 
-onMounted(() => {
-  load()
-  mounted.value = true
-})
+onMounted(load)
 
-const visible = computed(() => mounted.value && loaded.value && !choice.value && !preferencesOpen.value)
+const visible = computed(() => !choice.value && !preferencesOpen.value)
 const buttonClass = 'inline-flex min-h-11 flex-1 items-center justify-center rounded-md px-4 font-semibold sm:flex-none'
 </script>
 

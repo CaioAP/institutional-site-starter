@@ -91,11 +91,12 @@ const breadcrumbs = computed(() => current.value
         class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
       >
         <li
-          v-for="post in posts.items"
+          v-for="(post, i) in posts.items"
           :key="post.slug"
         >
           <CardsPostCard
             :post="post"
+            :priority="i === 0"
             heading-level="h2"
           />
         </li>

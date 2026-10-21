@@ -27,7 +27,7 @@ sections:
 
 A Exemplo Advocacia nasceu da vontade de oferecer uma advocacia diferente: técnica, mas acessível; estratégica, mas próxima.
 
-![Ilustração abstrata representando o escritório](/images/about.jpg)
+![Ilustração abstrata representando o escritório](/images/about.jpg){width="1600" height="1000"}
 
 ## Como trabalhamos
 

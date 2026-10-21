@@ -34,6 +34,7 @@ pnpm dev            # http://localhost:3000 (pt-BR) and /en
 | `pnpm test:unit` | Vitest |
 | `pnpm generate:test` | Generate with analytics + endpoint form enabled (what e2e expects) |
 | `pnpm test:e2e` | Playwright + axe against the generated site (run `pnpm generate:test` first) |
+| `pnpm lhci` | Lighthouse CI budgets against the generated site (run `pnpm generate` first; set `CHROME_PATH` if Chrome isn't found) |
 
 ## Project structure
 
@@ -57,6 +58,16 @@ theme.config.ts      brand: name, logo, colors, fonts, socials
 - **Cookie consent (LGPD):** reject is as easy as accept; analytics
   (`ANALYTICS_PROVIDER=ga4|plausible`) loads only after consent.
 - **WhatsApp button**, **lite video embeds**, **reduced-motion-aware animations**.
+
+## SEO and performance
+
+- Canonical, hreflang (only for translations that exist) and `og:locale` on
+  every page; one sitemap per locale with alternates; `robots.txt`.
+- schema.org graph: the firm as `LegalService`, `Person` for team members,
+  `BlogPosting` for posts, breadcrumbs.
+- Social images cropped to 1200×630 at build time.
+- Lighthouse budgets enforced in CI: Performance ≥ 90, Accessibility 100,
+  Best Practices ≥ 95, SEO 100, LCP < 2.5 s, CLS < 0.1 (mobile).
 
 All configuration is in [`.env.example`](.env.example).
 

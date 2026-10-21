@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import type { TeamMemberSummary } from '~~/lib/content/types'
 
-const props = defineProps<{ member: TeamMemberSummary, headingLevel?: 'h2' | 'h3' }>()
+const props = defineProps<{
+  member: TeamMemberSummary
+  headingLevel?: 'h2' | 'h3'
+  /** First card of a listing: likely the LCP image, so load it eagerly. */
+  priority?: boolean
+}>()
 const localePath = useLocalePath()
 const to = computed(() => localePath({ name: 'team-slug', params: { slug: props.member.slug } }))
 </script>
@@ -15,7 +20,9 @@ const to = computed(() => localePath({ name: 'team-slug', params: { slug: props.
       width="400"
       height="500"
       sizes="xs:100vw sm:100vw md:50vw lg:400px"
-      loading="lazy"
+      :loading="priority ? 'eager' : 'lazy'"
+      :fetchpriority="priority ? 'high' : undefined"
+      :preload="priority ? { fetchPriority: 'high' } : false"
       class="aspect-[4/5] w-full object-cover"
     />
     <div class="flex flex-1 flex-col gap-1 p-5">

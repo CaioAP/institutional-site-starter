@@ -45,7 +45,7 @@ function toggle() {
       :height="section.image.height ?? 1080"
       sizes="xs:100vw sm:100vw md:100vw lg:100vw xl:100vw 2xl:100vw"
       densities="x1"
-      preload
+      :preload="{ fetchPriority: 'high' }"
       fetchpriority="high"
       loading="eager"
       class="absolute inset-0 -z-20 size-full object-cover"

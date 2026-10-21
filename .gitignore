@@ -14,3 +14,4 @@ playwright-report
 .lighthouseci
 *.log
 .DS_Store
+.lighthouseci/

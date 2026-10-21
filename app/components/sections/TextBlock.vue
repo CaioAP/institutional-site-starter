@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import type { PageSection } from '~~/lib/content/types'
 
-defineProps<{ section: Extract<PageSection, { type: 'text' }> }>()
+defineProps<{
+  section: Extract<PageSection, { type: 'text' }>
+  /** First section of the page: its first image may be the LCP element. */
+  priority?: boolean
+}>()
 </script>
 
 <template>
@@ -12,6 +16,9 @@ defineProps<{ section: Extract<PageSection, { type: 'text' }> }>()
     >
       {{ section.heading }}
     </h2>
-    <RichText :value="section.body" />
+    <RichText
+      :value="section.body"
+      :priority="priority"
+    />
   </section>
 </template>

@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import type { PostSummary } from '~~/lib/content/types'
 
-const props = defineProps<{ post: PostSummary, headingLevel?: 'h2' | 'h3' }>()
+const props = defineProps<{
+  post: PostSummary
+  headingLevel?: 'h2' | 'h3'
+  /** First card of a listing: likely the LCP image, so load it eagerly. */
+  priority?: boolean
+}>()
 const { t } = useI18n()
 const localePath = useLocalePath()
 const formatDate = useFormatDate()
@@ -17,7 +22,9 @@ const to = computed(() => localePath({ name: 'blog-slug', params: { slug: props.
       width="640"
       height="360"
       sizes="xs:100vw sm:100vw md:50vw lg:400px"
-      loading="lazy"
+      :loading="priority ? 'eager' : 'lazy'"
+      :fetchpriority="priority ? 'high' : undefined"
+      :preload="priority ? { fetchPriority: 'high' } : false"
       class="aspect-video w-full object-cover"
     />
     <div class="flex flex-1 flex-col gap-3 p-5">

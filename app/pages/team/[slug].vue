@@ -3,10 +3,24 @@ const { t } = useI18n()
 const route = useRoute()
 const localePath = useLocalePath()
 const slug = String(route.params.slug)
+const siteUrl = useRuntimeConfig().public.siteUrl.replace(/\/$/, '')
 const member = await useContentOr404('member', (src, locale) => src.getTeamMember(slug, locale), [slug])
 
 useAlternates(() => member.value.translations, { name: 'team-slug', param: 'slug', fallback: 'team' })
 usePageSeo(() => ({ ...member.value.seo, image: member.value.seo.image ?? member.value.photo }))
+useSchemaOrg([
+  defineWebPage({ '@type': 'ProfilePage', 'mainEntity': { '@id': `${siteUrl}${route.path}#person` } }),
+  definePerson({
+    '@id': `${siteUrl}${route.path}#person`,
+    'name': member.value.name,
+    'jobTitle': member.value.role,
+    'description': member.value.shortBio,
+    'image': member.value.photo.src,
+    ...(member.value.email ? { email: member.value.email } : {}),
+    ...(member.value.linkedin ? { sameAs: [member.value.linkedin] } : {}),
+    'worksFor': { '@id': `${siteUrl}/#identity` },
+  }),
+])
 </script>
 
 <template>
@@ -68,6 +82,7 @@ usePageSeo(() => ({ ...member.value.seo, image: member.value.seo.image ?? member
           height="720"
           sizes="xs:100vw sm:288px"
           fetchpriority="high"
+          :preload="{ fetchPriority: 'high' }"
           class="aspect-[4/5] w-full max-w-72 rounded-lg object-cover md:order-1"
         />
       </div>

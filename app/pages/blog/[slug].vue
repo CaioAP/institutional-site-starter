@@ -13,6 +13,22 @@ useSeoMeta({
   articlePublishedTime: () => post.value.publishedAt,
   articleModifiedTime: () => post.value.updatedAt,
 })
+useSchemaOrg([
+  defineArticle({
+    '@type': 'BlogPosting',
+    'headline': post.value.title,
+    'description': post.value.excerpt,
+    'image': post.value.cover.src,
+    'datePublished': post.value.publishedAt,
+    'dateModified': post.value.updatedAt ?? post.value.publishedAt,
+    'articleSection': [post.value.category.title],
+    'keywords': post.value.tags,
+    'author': definePerson({
+      name: post.value.author.name,
+      url: localePath({ name: 'team-slug', params: { slug: post.value.author.slug } }),
+    }),
+  }),
+])
 
 const url = computed(() => `${siteUrl}${route.path}`)
 const categoryLink = computed(() => localePath({ name: 'blog-category-category', params: { category: post.value.category.slug } }))
@@ -67,7 +83,7 @@ const categoryLink = computed(() => localePath({ name: 'blog-category-category',
         :height="post.cover.height ?? 900"
         sizes="xs:100vw sm:100vw md:100vw lg:100vw xl:1152px"
         fetchpriority="high"
-        preload
+        :preload="{ fetchPriority: 'high' }"
         class="aspect-video w-full rounded-lg object-cover"
       />
     </div>

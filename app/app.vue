@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import theme from '#theme'
+import { CONSENT_HEAD_SCRIPT } from '~~/lib/consent'
 
-const head = useLocaleHead()
 const { t } = useI18n()
 
+// <html lang>, canonical and hreflang links come from @nuxtjs/i18n (strict SEO mode).
 useHead({
-  htmlAttrs: { lang: () => head.value.htmlAttrs.lang },
+  // Shows the server-rendered consent banner before first paint when needed.
+  script: [{ key: 'consent-state', innerHTML: CONSENT_HEAD_SCRIPT, tagPosition: 'head' }],
   titleTemplate: (title?: string) => (title ? `${title} | ${theme.brand.name}` : theme.brand.name),
 })
 // Keeps NuxtRouteAnnouncer in the active language.

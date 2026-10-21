@@ -27,7 +27,7 @@ sections:
 
 Exemplo Advocacia was born from the wish to practice law differently: technical yet accessible, strategic yet personal.
 
-![Abstract illustration representing the office](/images/about.jpg)
+![Abstract illustration representing the office](/images/about.jpg){width="1600" height="1000"}
 
 ## How we work
 

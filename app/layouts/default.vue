@@ -1,3 +1,8 @@
+<script setup lang="ts">
+const settings = await useSiteSettings()
+useSiteIdentity(settings)
+</script>
+
 <template>
   <div class="flex min-h-dvh flex-col">
     <LayoutSkipLink />
