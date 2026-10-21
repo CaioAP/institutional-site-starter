@@ -20,7 +20,7 @@ test('language switcher goes to the translated page', async ({ page, isMobile })
   if (isMobile) await page.getByRole('button', { name: 'Abrir menu' }).click()
   await page.getByRole('link', { name: 'English', exact: true }).first().click()
   await expect(page).toHaveURL(/\/en\/about$/)
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('About')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('About the firm')
 })
 
 test('skip link is first in tab order and moves focus to main', async ({ page, browserName }) => {

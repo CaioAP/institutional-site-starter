@@ -37,5 +37,75 @@
   },
   "placeholder": {
     "comingSoon": "Conteúdo em construção."
+  },
+  "common": {
+    "readMore": "Saiba mais",
+    "seeAll": "Ver todos",
+    "viewProfile": "Ver perfil de {name}",
+    "readArticle": "Ler artigo: {title}",
+    "minutesRead": "{n} min de leitura",
+    "publishedOn": "Publicado em {date}",
+    "updatedOn": "Atualizado em {date}",
+    "lastUpdated": "Última atualização: {date}"
+  },
+  "home": {
+    "seeAllAreas": "Ver todas as áreas",
+    "seeAllTeam": "Conhecer a equipe",
+    "seeAllPosts": "Ver todos os artigos",
+    "mapLink": "Ver no mapa",
+    "contactCta": "Fale conosco"
+  },
+  "areas": {
+    "lead": "Conheça as áreas em que o escritório atua.",
+    "team": "Profissionais desta área",
+    "cta": "Precisa de ajuda com {area}?",
+    "ctaText": "Conte o seu caso. Respondemos em até um dia útil."
+  },
+  "team": {
+    "lead": "Advogados que vão acompanhar o seu caso de perto.",
+    "areas": "Áreas de atuação",
+    "contact": "Contato",
+    "registration": "Registro",
+    "email": "E-mail",
+    "linkedin": "LinkedIn de {name}"
+  },
+  "blog": {
+    "lead": "Artigos e notícias sobre temas jurídicos do dia a dia.",
+    "categories": "Categorias",
+    "all": "Todos",
+    "empty": "Nenhum artigo encontrado.",
+    "pagination": "Paginação",
+    "previous": "Anterior",
+    "next": "Próxima",
+    "pageN": "Página {n}",
+    "pageOf": "Página {page} de {total}",
+    "categoryTitle": "Artigos sobre {category}",
+    "author": "Sobre o autor",
+    "related": "Leia também",
+    "share": "Compartilhar",
+    "shareOn": "Compartilhar no {network}",
+    "shareEmail": "Enviar por e-mail",
+    "tags": "Tags",
+    "category": "Categoria"
+  },
+  "video": {
+    "play": "Reproduzir vídeo: {title}",
+    "notice": "Ao reproduzir, o vídeo é carregado de {provider}."
+  },
+  "contact": {
+    "info": "Informações de contato",
+    "email": "E-mail",
+    "phone": "Telefone",
+    "whatsapp": "WhatsApp",
+    "address": "Endereço",
+    "hours": "Horário de atendimento",
+    "formSoon": "O formulário de contato será adicionado em breve."
+  },
+  "search": {
+    "soon": "A busca será adicionada em breve."
+  },
+  "hero": {
+    "playVideo": "Reproduzir vídeo de fundo",
+    "pauseVideo": "Pausar vídeo de fundo"
   }
 }

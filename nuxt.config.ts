@@ -60,4 +60,10 @@ export default defineNuxtConfig({
     detectBrowserLanguage: false,
     baseUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
   },
+
+  image: {
+    // `xs` lets components write mobile-first sizes like "xs:100vw md:50vw".
+    screens: { 'xs': 320, 'sm': 640, 'md': 768, 'lg': 1024, 'xl': 1280, '2xl': 1536 },
+    quality: 80,
+  },
 })

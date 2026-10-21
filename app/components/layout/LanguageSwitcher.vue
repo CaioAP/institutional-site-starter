@@ -1,10 +1,13 @@
 <script setup lang="ts">
 /**
  * Links to the current page in every other locale. Detail pages register their
- * translated slugs with `setI18nParams`, so the link lands on the equivalent page.
+ * translations with `useAlternates`, so the link lands on the equivalent page,
+ * or on the localized listing when there is no translation.
  */
+import type { Locale } from '~~/lib/content/types'
+
 const { locale, locales, t } = useI18n()
-const switchLocalePath = useSwitchLocalePath()
+const alternateLink = useAlternateLink()
 
 const others = computed(() => locales.value.filter(l => l.code !== locale.value))
 </script>
@@ -19,7 +22,7 @@ const others = computed(() => locales.value.filter(l => l.code !== locale.value)
       :key="l.code"
     >
       <NuxtLink
-        :to="switchLocalePath(l.code)"
+        :to="alternateLink(l.code as Locale)"
         :lang="l.language"
         :hreflang="l.language"
         class="inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 text-sm font-medium text-text no-underline hover:text-accent"

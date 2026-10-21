@@ -1,8 +1,8 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
-import { allStaticUrls } from '../support/routes'
+import { allDetailUrls, allStaticUrls } from '../support/routes'
 
-const urls = [...allStaticUrls, '/pagina-que-nao-existe', '/en/missing-page']
+const urls = [...allStaticUrls, ...allDetailUrls, '/pagina-que-nao-existe', '/en/missing-page']
 
 for (const url of urls) {
   test(`no axe violations (WCAG 2.2 AA) on ${url}`, async ({ page }) => {
