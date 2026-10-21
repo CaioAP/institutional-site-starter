@@ -46,6 +46,12 @@ Then update `theme.config.ts` → `fonts.sans` / `fonts.serif` with the package
 name and the CSS family name it declares (shown on the Fontsource page, e.g.
 `"Inter Variable"`). Headings use the serif family, body text the sans family.
 
+Use a **variable** Fontsource package (`@fontsource-variable/...`): the theme
+module reads its `index.css`, serves the files from `/fonts/<name>/` and
+preloads the latin subset. Fonts use `font-display: optional`, so text never
+jumps when a font arrives late (that visitor sees the fallback stack for
+that page). Pick a `fallback` stack that looks close to the brand font.
+
 ## 4. Shape and spacing (5 min)
 
 - `radius`: base corner radius in rem. `rounded-sm` / `rounded-lg` derive from it.

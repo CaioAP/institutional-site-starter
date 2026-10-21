@@ -331,8 +331,17 @@ The first Lighthouse run (mobile, simulated throttling) scored 70–73. Fixes:
 - Markdown body images take `{width="…" height="…"}` (documented in
   `content/README.md`), which removed a 0.07 CLS on the About page.
 
+- Fonts: CI's Chrome (on a runner whose fallback fonts differ a lot from
+  Inter) measured CLS 0.14 on the contact page when the web fonts swapped in.
+  The theme module now serves the Fontsource files from `/fonts/<name>/`,
+  preloads the latin subset of both families, and switches them to
+  `font-display: optional`. With the preload the fonts are there for the
+  first paint; when they aren't, the fallback stays for that view instead of
+  shifting the text. Only the files the CSS references are shipped (≈420 KB
+  in total, of which a page loads two ≈50 KB files).
+
 Result: performance 95–100 on the nine audited pages (median of three runs),
-accessibility 100, best practices 100, SEO 100, LCP ≈1.0–1.3 s, CLS ≤0.001.
+accessibility 100, best practices 100, SEO 100, LCP ≈1.5–1.8 s, CLS 0.
 
 ### Lighthouse CI
 
