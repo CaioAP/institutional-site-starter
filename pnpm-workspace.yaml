@@ -1,0 +1,6 @@
+packages:
+  - "studios/*"
+
+onlyBuiltDependencies:
+  - esbuild
+  - unrs-resolver

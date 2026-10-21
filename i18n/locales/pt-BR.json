@@ -1,0 +1,41 @@
+{
+  "a11y": {
+    "skipToContent": "Pular para o conteúdo",
+    "mainNav": "Navegação principal",
+    "footerNav": "Links institucionais",
+    "breadcrumb": "Você está em",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "languageSwitcher": "Idioma",
+    "pageLoaded": "Página carregada: {title}",
+    "opensInNewTab": "(abre em nova aba)",
+    "homeLink": "{name} – página inicial"
+  },
+  "nav": {
+    "home": "Início",
+    "about": "Sobre",
+    "practiceAreas": "Áreas de atuação",
+    "team": "Equipe",
+    "blog": "Blog",
+    "contact": "Contato",
+    "search": "Buscar",
+    "privacy": "Política de privacidade",
+    "terms": "Termos de uso",
+    "cookiePreferences": "Preferências de cookies"
+  },
+  "footer": {
+    "contact": "Contato",
+    "address": "Endereço",
+    "follow": "Redes sociais",
+    "rights": "© {year} {name}. Todos os direitos reservados."
+  },
+  "error": {
+    "notFoundTitle": "Página não encontrada",
+    "notFoundText": "O endereço pode ter mudado ou a página não existe mais.",
+    "genericTitle": "Algo deu errado",
+    "backHome": "Voltar ao início"
+  },
+  "placeholder": {
+    "comingSoon": "Conteúdo em construção."
+  }
+}

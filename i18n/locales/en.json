@@ -1,0 +1,41 @@
+{
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "mainNav": "Main navigation",
+    "footerNav": "Company links",
+    "breadcrumb": "You are here",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "languageSwitcher": "Language",
+    "pageLoaded": "Page loaded: {title}",
+    "opensInNewTab": "(opens in a new tab)",
+    "homeLink": "{name} – home page"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "practiceAreas": "Practice areas",
+    "team": "Team",
+    "blog": "Blog",
+    "contact": "Contact",
+    "search": "Search",
+    "privacy": "Privacy policy",
+    "terms": "Terms of use",
+    "cookiePreferences": "Cookie preferences"
+  },
+  "footer": {
+    "contact": "Contact",
+    "address": "Address",
+    "follow": "Social media",
+    "rights": "© {year} {name}. All rights reserved."
+  },
+  "error": {
+    "notFoundTitle": "Page not found",
+    "notFoundText": "The address may have changed or the page no longer exists.",
+    "genericTitle": "Something went wrong",
+    "backHome": "Back to home"
+  },
+  "placeholder": {
+    "comingSoon": "Content coming soon."
+  }
+}
