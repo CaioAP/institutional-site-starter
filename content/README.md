@@ -19,7 +19,9 @@ content/
 - **`translationKey`** links translations: give the pt-BR and en files the
   same value. It is also what references use: `author: ana-ribeiro`,
   `category: privacidade`, `team: [bruno-costa]`, `areas: [contratos]`.
-- **Images** need `alt`. Use `alt: ""` only for decorative images.
+- **Images** need `alt`. Use `alt: ""` only for decorative images. Give
+  images in the Markdown body their size, so the page doesn't jump while they
+  load: `![Alt text](/images/photo.jpg){width="1200" height="800"}`.
 - **Page sections** are listed in frontmatter (`sections:`). A
   `- type: body` entry renders the Markdown body of the file at that position.
 - **Video in posts**:

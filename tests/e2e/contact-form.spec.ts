@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from '../support/test'
 import { withConsent } from '../support/consent'
 
 const ENDPOINT = 'https://forms.example.test/contact'

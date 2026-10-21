@@ -1,9 +1,20 @@
 import tailwindcss from '@tailwindcss/vite'
 import { localizedPages } from './i18n/routes'
 
+/** Public origin of the site. Canonical URLs, hreflang, sitemap and OG images use it. */
+const SITE_URL = process.env.NUXT_PUBLIC_SITE_URL || 'https://www.example.com'
+
 export default defineNuxtConfig({
 
-  modules: ['@nuxt/eslint', '@nuxtjs/i18n', '@nuxt/content', '@nuxt/image'],
+  modules: [
+    '@nuxt/eslint',
+    '@nuxtjs/i18n',
+    '@nuxt/content',
+    '@nuxt/image',
+    '@nuxtjs/sitemap',
+    '@nuxtjs/robots',
+    'nuxt-schema-org',
+  ],
   devtools: { enabled: true },
 
   app: {
@@ -16,13 +27,19 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/base.css'],
 
+  site: {
+    url: SITE_URL,
+    name: 'Exemplo Advocacia',
+    defaultLocale: 'pt-BR',
+  },
+
   content: {
     experimental: { sqliteConnector: 'native' },
   },
 
   runtimeConfig: {
     public: {
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+      siteUrl: SITE_URL,
       /** local | sanity – see lib/content/source.ts */
       contentSource: process.env.CONTENT_SOURCE || 'local',
       /** netlify | endpoint – see lib/forms/contact.ts */
@@ -70,12 +87,31 @@ export default defineNuxtConfig({
     customRoutes: 'config',
     pages: localizedPages,
     detectBrowserLanguage: false,
-    baseUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    // Strict SEO drops hreflang links for locales a page has no translation for.
+    experimental: { strictSeo: true },
+    baseUrl: SITE_URL,
   },
 
   image: {
     // `xs` lets components write mobile-first sizes like "xs:100vw md:50vw".
     screens: { 'xs': 320, 'sm': 640, 'md': 768, 'lg': 1024, 'xl': 1280, '2xl': 1536 },
     quality: 80,
+  },
+
+  robots: {
+    // Preview deployments set NUXT_SITE_ENV=preview to get noindex + Disallow: /
+    disallow: [],
+  },
+
+  schemaOrg: {
+    // Identity (LegalService) is defined from SiteSettings in app/app.vue.
+    identity: undefined,
+  },
+
+  sitemap: {
+    // Routes come from ContentSource.listRoutes() (server/api/__sitemap__/urls.ts).
+    sources: ['/api/__sitemap__/urls'],
+    excludeAppSources: true,
+    xsl: false,
   },
 })
