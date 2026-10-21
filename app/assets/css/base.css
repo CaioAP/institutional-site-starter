@@ -1,0 +1,68 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    @apply bg-surface text-text font-sans antialiased;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-serif text-balance;
+    line-height: 1.2;
+  }
+
+  a {
+    @apply text-accent underline-offset-4;
+  }
+
+  a:hover {
+    @apply text-accent-strong;
+  }
+
+  /* One visible, high-contrast focus style for every interactive element (WCAG 2.4.7 / 2.4.11). */
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Programmatic focus targets (e.g. <main> after navigation) don't need a ring. */
+  [tabindex="-1"]:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container-content {
+    @apply mx-auto w-full max-w-(--container-content) px-5 sm:px-8;
+  }
+}
+
+@utility sr-only-focusable {
+  &:not(:focus):not(:focus-within) {
+    @apply sr-only;
+  }
+}
+
+/* Dark bands (footer, CTA): switch the focus ring to the inverse text color for contrast. */
+@utility on-inverse {
+  & :focus-visible {
+    outline-color: var(--color-text-inverse);
+  }
+}

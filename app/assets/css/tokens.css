@@ -1,0 +1,38 @@
+/*
+ * Design tokens. Brand values (colors, fonts, radius, spacing unit) come from
+ * theme.config.ts as --theme-* variables; this file maps them into Tailwind's
+ * theme so utilities like `bg-surface`, `text-accent`, `font-serif` work.
+ * Non-brand tokens (type scale, layout widths, motion) live here.
+ */
+@theme inline {
+  --color-surface: var(--theme-surface);
+  --color-surface-muted: var(--theme-surface-muted);
+  --color-surface-inverse: var(--theme-surface-inverse);
+  --color-text: var(--theme-text);
+  --color-text-muted: var(--theme-text-muted);
+  --color-text-inverse: var(--theme-text-inverse);
+  --color-accent: var(--theme-accent);
+  --color-accent-strong: var(--theme-accent-strong);
+  --color-on-accent: var(--theme-on-accent);
+  --color-border: var(--theme-border);
+  --color-focus: var(--theme-focus);
+  --color-danger: var(--theme-danger);
+  --color-success: var(--theme-success);
+
+  --font-sans: var(--theme-font-sans);
+  --font-serif: var(--theme-font-serif);
+
+  --spacing: var(--theme-spacing);
+
+  --radius-sm: calc(var(--theme-radius) * 0.5);
+  --radius-md: var(--theme-radius);
+  --radius-lg: calc(var(--theme-radius) * 2);
+}
+
+@theme {
+  --container-content: 72rem;
+  --container-prose: 42rem;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-reveal: 600ms;
+}
