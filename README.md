@@ -6,7 +6,7 @@ WCAG 2.2 AA, with a swappable content layer.
 
 Sample content belongs to a fictitious firm, **Exemplo Advocacia**.
 
-> Status: milestone 1 (Foundation). See the build plan in
+> Status: milestones 1–2 (Foundation, Content layer). See the build plan in
 > [docs/decisions.md](docs/decisions.md).
 
 ## Requirements
