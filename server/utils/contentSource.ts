@@ -1,6 +1,8 @@
 import type { H3Event } from 'h3'
 import { queryCollection } from '@nuxt/content/nitro'
 import { createLocalSource, type LocalStore } from '../../lib/content/adapters/local'
+import { createSanitySource } from '../../lib/content/adapters/sanity'
+import { getSanityFetcher } from '../../lib/content/adapters/sanity-fetcher'
 import { resolveContentSourceName, type ContentSource } from '../../lib/content/source'
 
 /**
@@ -19,6 +21,6 @@ export function getServerContentSource(event: H3Event): ContentSource {
       return createLocalSource(store)
     }
     case 'sanity':
-      throw new Error('CONTENT_SOURCE=sanity is not available yet (added with the CMS samples).')
+      return createSanitySource(getSanityFetcher(useRuntimeConfig(event).sanity))
   }
 }

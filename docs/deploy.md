@@ -9,10 +9,12 @@ for **Cloudflare Pages** (default) and **Netlify**.
 | Variable | Required | Notes |
 | --- | --- | --- |
 | `NUXT_PUBLIC_SITE_URL` | Yes for production | Public origin, e.g. `https://www.client.com.br`. Canonical links, hreflang, sitemap and social images use it. Defaults to `https://www.example.com`. |
+| `CONTENT_SOURCE=sanity` + `SANITY_PROJECT_ID` | Only for Sanity | See [studios/sanity/README.md](../studios/sanity/README.md). Without a project id the build uses the sample seed. |
+| `SANITY_API_READ_TOKEN` | Only for a private dataset | The one secret: build time only, set it in the host's environment settings. |
 | Everything else in [`.env.example`](../.env.example) | No | Form provider, analytics, WhatsApp button, content source. |
 
-All variables are read at build time and end up in public files, so none of
-them may be a secret. Changing one needs a new build.
+All other variables are read at build time and may end up in public files,
+so none of them may be a secret. Changing one needs a new build.
 
 Node 22 and pnpm 10 are used (`.node-version`, `packageManager` in
 `package.json`); both hosts pick them up on their own.

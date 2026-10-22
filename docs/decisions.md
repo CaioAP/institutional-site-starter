@@ -426,3 +426,118 @@ Lighthouse job builds that way and checks the output files.
 Documented in `docs/deploy.md` (Cloudflare deploy hooks, Netlify build hooks,
 and a Sanity webhook pointing at one). No account was created and no hook URL
 is in the repo.
+
+## Milestone 7 – CMS samples (2026-10-21)
+
+### Versions
+
+| Package | Version | Where |
+| --- | --- | --- |
+| @sanity/client | 8.10.1 | site (build time) |
+| groq-js | 2.0.0 | site (offline Sanity source, tests) |
+| github-slugger | 2.0.0 | site (heading ids for Sanity rich text) |
+| jiti | 2.7.0 | dev (runs `scripts/sanity-seed.ts`) |
+| nuxt-studio | 1.8.0 | dev (`pnpm dev:studio` only) |
+| sanity, @sanity/vision | 6.20.0 | studios/sanity |
+| @sanity/document-internationalization | 6.2.43 | studios/sanity |
+| sanity-plugin-internationalized-array | 5.3.6 | studios/sanity (peer of the above) |
+| @sanity/language-filter | 5.0.23 | studios/sanity (peer of the above) |
+| @sanity/locale-pt-br | 1.1.37 | studios/sanity |
+| @sanity/icons | 5.2.3 | studios/sanity |
+| react, react-dom | 19.3.1 | studios/sanity |
+| styled-components | 6.6.0 | studios/sanity |
+
+`pnpm install` warns that `@sanity/cli` wants zod 4 while Nuxt Content uses
+zod 3. They are separate copies and neither is used across the boundary.
+
+### One mapper for every source
+
+The local adapter's mapping (SEO fallbacks, sorting, references,
+translations, related posts, routes) moved to `lib/content/adapters/documents.ts`.
+Each adapter now only turns its CMS shapes into normalized documents. Rules
+like "related posts prefer the same category" therefore can't drift between
+sources, which is what makes "render the same pages identically" testable.
+
+### Sanity runs without an account
+
+No Sanity project exists for the starter (the agent creates no accounts). So
+that the Sanity sample still runs with one command, the adapter takes a
+`fetch(query, params)` function:
+
+- with `SANITY_PROJECT_ID` set, it is `@sanity/client`;
+- without it, `groq-js` evaluates the **same GROQ queries** in memory over the
+  seed file. `pnpm dev:sanity` prints a warning and runs on the seed.
+
+CI uses the offline mode to prove the sample works: the seed must be current
+with the local content, the Sanity adapter must return exactly the same
+domain data as the local adapter (`tests/build/sanity-parity.test.ts`), a site
+generated with `CONTENT_SOURCE=sanity` must render the same HTML as the local
+one (`scripts/compare-builds.ts`), the seed must validate against the studio
+schemas, and the studio must typecheck and build. What CI cannot check is the
+real Sanity API, auth and image CDN; those need a project (see
+`studios/sanity/README.md`).
+
+### Seed generated from the local content
+
+`pnpm seed:sanity` reads Nuxt Content's build database
+(`.data/content/contents.sqlite`) through the local adapter and writes
+`studios/sanity/seed/content.ndjson` in `sanity dataset import` format, with
+deterministic ids and keys so diffs stay readable. Images are
+`_sanityAsset` import directives pointing at `public/`; `assets.json` holds
+their dimensions for the offline mode. The local content stays the single
+source of sample content.
+
+### Sanity content model
+
+- One document per language (`language` field), linked by
+  `@sanity/document-internationalization` metadata documents. The metadata id
+  is the `translationKey`. References (author, category, team, areas) point at
+  documents in the same language, and the reference pickers only offer those.
+- Post excerpt is `excerpt` in Sanity (`description` in the local front
+  matter, kept from M2).
+- Rich text offers only what `<RichText>` renders. Tables, code blocks and
+  rules have no equivalent; the seed script refuses them instead of dropping
+  content.
+- Videos are a pasted YouTube/Vimeo link; `lib/content/rich-text/video.ts`
+  turns it into provider + id.
+- Heading ids are generated the way Nuxt Content does (github-slugger, `_`
+  before a leading digit), so anchors match across sources.
+- Image hotspot/crop are stored but not applied: `<NuxtImg>` resizes the full
+  image. `cdn.sanity.io` is in `image.domains`, so Sanity images are
+  optimized and prerendered like local ones.
+
+### Sanity queries in the browser go through a dev-only proxy
+
+Client-side navigation in `nuxt dev` runs content queries in the browser. For
+Sanity they go to `server/api/_content/sanity.post.ts`, which only answers in
+dev, so offline mode works and no token or CORS origin is needed. Generated
+sites never call it, since every page ships its prerendered payload, and the
+client bundle is unchanged in size.
+
+### Preview
+
+The spec asks for a "preview link to the site". Studio's "Open preview"
+opens the document's page on `SANITY_STUDIO_SITE_URL`. A static site only
+shows published content, so draft preview runs locally:
+`pnpm dev:sanity` with `SANITY_PERSPECTIVE=drafts` and a read token. In-studio
+live preview (Sanity's Presentation tool) needs pages rendered on request,
+which the static-only rule excludes.
+
+### Nuxt Studio: local editing only (trade-off)
+
+`nuxt-studio` 1.8.0 is free and self-hosted, so it supports self-setup.
+Local editing (`pnpm dev:studio`) works on top of `content/`. **Publishing
+from the website needs server routes** (OAuth sign-in, Git commits), so it only
+runs on an SSR deployment. That conflicts with "no server runtime for pages",
+so production Studio is not enabled. `docs/nuxt-studio.md` documents a
+separate SSR "editor" deployment that keeps the public site static, with the
+GitHub OAuth steps. The module is added only when `STUDIO_EDITOR=true`. That
+name avoids `NUXT_STUDIO`, which Nuxt would read as a runtime config
+override and which breaks the module.
+
+### Evaluation checklist
+
+`docs/cms-evaluation.md` has one table per sample with the spec's ten
+criteria and empty notes/score columns, plus a suggested timed script.
+Pricing and free-tier limits are left for the evaluator to check on the
+vendor sites.

@@ -74,3 +74,34 @@ jobs:
           name: lighthouse-reports
           path: .lighthouseci/reports
           retention-days: 7
+
+  cms-samples:
+    name: CMS samples (Sanity parity + studio)
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Studio typecheck, schema-vs-seed check and build
+        run: |
+          pnpm --filter @starter/sanity-studio typecheck
+          pnpm --filter @starter/sanity-studio check:seed
+          pnpm --filter @starter/sanity-studio build
+      # The local build also writes Nuxt Content's database, which the checks below read.
+      - run: pnpm generate
+      - name: Seed is up to date with the local content
+        run: |
+          pnpm seed:sanity
+          git diff --exit-code -- studios/sanity/seed || { echo "Run pnpm seed:sanity and commit studios/sanity/seed"; exit 1; }
+      - name: Sanity adapter returns the same content (GROQ over the seed)
+        run: pnpm test:build
+      - name: Sanity build renders the same pages
+        run: |
+          mv .output/public "$RUNNER_TEMP/local-build"
+          CONTENT_SOURCE=sanity pnpm generate
+          node scripts/compare-builds.ts "$RUNNER_TEMP/local-build" .output/public
