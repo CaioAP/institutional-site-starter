@@ -11,7 +11,7 @@ stable release unless noted.
 | Default host | Cloudflare Pages (Netlify config also provided) | Netlify |
 | Analytics | None by default; GA4 or Plausible enabled via env, loaded only after consent | — |
 | GSAP | Not included; CSS + IntersectionObserver cover current needs | Allow per project |
-| Default CMS | Local Nuxt Content until the manual evaluation in `cms-evaluation.md` | Nuxt Studio, Sanity |
+| Default CMS | Local Nuxt Content until the manual evaluation in `cms-evaluation.md` | Sanity (recommended, see `cms-evaluation.md`), Contentful. Nuxt Studio ruled out (production needs SSR) |
 
 ## Milestone 1 – Foundation (2026-10-21)
 
