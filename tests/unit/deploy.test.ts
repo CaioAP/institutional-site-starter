@@ -9,7 +9,7 @@ describe('build env', () => {
     expect(readBuildEnv({})).toMatchObject({
       siteUrl: 'https://www.example.com',
       siteEnv: 'production',
-      contentSource: 'local',
+      contentSource: 'sanity',
       formProvider: 'netlify',
       analyticsProvider: 'none',
       whatsappButton: true,

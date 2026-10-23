@@ -1,7 +1,7 @@
 # Sanity Studio sample
 
-Sanity Studio for the starter's content model, set up for the manual CMS
-evaluation in [docs/cms-evaluation.md](../../docs/cms-evaluation.md).
+Sanity Studio for the starter's content model. Sanity is the starter's
+default CMS (chosen in [docs/cms-evaluation.md](../../docs/cms-evaluation.md)).
 
 - **Schemas** (`schemas/`) mirror the domain models in `lib/content/types.ts`:
   site settings, pages with sections, practice areas, team members, blog
@@ -49,9 +49,9 @@ offline (see below).
    `pnpm seed:sanity:import` to load the sample content and images.
 4. `pnpm studio:sanity` and sign in. In Manage → API → CORS origins, add
    `http://localhost:3333` if the studio asks for it.
-5. In the root `.env`, set `CONTENT_SOURCE=sanity` and `SANITY_PROJECT_ID`
-   (plus `SANITY_DATASET` if not `production`). `pnpm dev:sanity` now reads the
-   real dataset; `pnpm generate` builds the static site from it.
+5. In the root `.env`, set `SANITY_PROJECT_ID` (plus `SANITY_DATASET` if not
+   `production`). Sanity is the default content source, so `pnpm dev` now
+   reads the real dataset and `pnpm generate` builds the static site from it.
 
 For a private dataset, create a read token (Manage → API → Tokens, Viewer)
 and set `SANITY_API_READ_TOKEN` in the build environment. It is only used at

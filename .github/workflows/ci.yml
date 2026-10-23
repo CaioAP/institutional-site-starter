@@ -93,7 +93,7 @@ jobs:
           pnpm --filter @starter/sanity-studio check:seed
           pnpm --filter @starter/sanity-studio build
       # The local build also writes Nuxt Content's database, which the checks below read.
-      - run: pnpm generate
+      - run: CONTENT_SOURCE=local pnpm generate
       - name: Seed is up to date with the local content
         run: |
           pnpm seed:sanity

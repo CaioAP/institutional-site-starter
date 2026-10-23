@@ -1,9 +1,10 @@
 # CMS evaluation
 
 Which CMS should non-technical editors use? This page has the recommendation
-(desk research, 2026-10-23) and a checklist to confirm it by hand. Record the
-final choice in the "Open decisions" table in [decisions.md](decisions.md);
-the default stays local Nuxt Content until then.
+(desk research, 2026-10-23) and a checklist to confirm it by hand.
+
+**Decision (Caio, 2026-10-23): Sanity is the default CMS.** The checklist
+below stays useful to test the editor experience with real editors.
 
 ## Recommendation (2026-10-23)
 
@@ -180,4 +181,4 @@ on trust):
 | C. Sanity | | | |
 | D. Contentful | | | |
 
-Decision and date:
+Decision and date: Sanity, 2026-10-23 (desk evaluation above).

@@ -9,7 +9,7 @@ export interface BuildEnv {
   /** production | preview. Previews are noindex. */
   siteEnv: 'production' | 'preview'
   contentSource: string
-  /** Sanity project; empty = offline seed (CONTENT_SOURCE=sanity only). */
+  /** Sanity project; empty = offline seed in studios/sanity/seed. */
   sanityProjectId: string
   sanityDataset: string
   sanityApiVersion: string
@@ -41,7 +41,7 @@ export function readBuildEnv(env: Env = process.env): BuildEnv {
   return {
     siteUrl: (env.NUXT_PUBLIC_SITE_URL || 'https://www.example.com').replace(/\/$/, ''),
     siteEnv: detectSiteEnv(env),
-    contentSource: env.CONTENT_SOURCE || 'local',
+    contentSource: env.CONTENT_SOURCE || 'sanity',
     sanityProjectId: env.SANITY_PROJECT_ID || '',
     sanityDataset: env.SANITY_DATASET || 'production',
     sanityApiVersion: env.SANITY_API_VERSION || '2025-02-19',

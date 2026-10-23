@@ -1,6 +1,8 @@
 # Local content
 
-Used when `CONTENT_SOURCE=local` (the default). Schemas are in
+Used when `CONTENT_SOURCE=local`. The default source is Sanity, whose sample
+seed is generated from these files (`pnpm seed:sanity`), so edit content here
+to change the sample content of both. Schemas are in
 [`content.config.ts`](../content.config.ts).
 
 ```
