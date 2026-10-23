@@ -554,3 +554,9 @@ growth path than Contentful, and it was already built and checked in CI.
 - `content/` stays as the source of that seed and as the `local` option.
   CI still checks that the seed matches it and that both render the same HTML.
 - Contentful has no adapter; Nuxt Studio stays dev-only.
+- Pages now take their content language from their own route
+  (`useContentLocale`), not from i18n's global locale. With the global locale,
+  the language switcher made the old page re-query the CMS for the new
+  language before the new page's prerendered data had loaded. With the local
+  source this went unnoticed, because Nuxt Content can query in the browser;
+  with Sanity on a static site the query failed and showed a 404.
