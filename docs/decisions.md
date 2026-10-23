@@ -11,7 +11,7 @@ stable release unless noted.
 | Default host | Cloudflare Pages (Netlify config also provided) | Netlify |
 | Analytics | None by default; GA4 or Plausible enabled via env, loaded only after consent | — |
 | GSAP | Not included; CSS + IntersectionObserver cover current needs | Allow per project |
-| Default CMS | Local Nuxt Content until the manual evaluation in `cms-evaluation.md` | Nuxt Studio, Sanity |
+| Default CMS | **Decided 2026-10-23: Sanity** (`CONTENT_SOURCE=sanity`), see `cms-evaluation.md` | Local Nuxt Content (`CONTENT_SOURCE=local`), Contentful (no adapter yet). Nuxt Studio ruled out (production needs SSR) |
 
 ## Milestone 1 – Foundation (2026-10-21)
 
@@ -541,3 +541,22 @@ override and which breaks the module.
 criteria and empty notes/score columns, plus a suggested timed script.
 Pricing and free-tier limits are left for the evaluator to check on the
 vendor sites.
+
+## Default CMS: Sanity (2026-10-23)
+
+Caio chose Sanity as the default CMS after the comparison in
+[cms-evaluation.md](cms-evaluation.md): Portuguese Studio interface, cheaper
+growth path than Contentful, and it was already built and checked in CI.
+
+- `CONTENT_SOURCE` now defaults to `sanity` (`lib/deploy/env.ts`,
+  `.env.example`). A fresh clone with no env vars still builds: without
+  `SANITY_PROJECT_ID` the adapter reads the sample seed offline.
+- `content/` stays as the source of that seed and as the `local` option.
+  CI still checks that the seed matches it and that both render the same HTML.
+- Contentful has no adapter; Nuxt Studio stays dev-only.
+- Pages now take their content language from their own route
+  (`useContentLocale`), not from i18n's global locale. With the global locale,
+  the language switcher made the old page re-query the CMS for the new
+  language before the new page's prerendered data had loaded. With the local
+  source this went unnoticed, because Nuxt Content can query in the browser;
+  with Sanity on a static site the query failed and showed a 404.

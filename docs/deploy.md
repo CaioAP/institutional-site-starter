@@ -9,7 +9,7 @@ for **Cloudflare Pages** (default) and **Netlify**.
 | Variable | Required | Notes |
 | --- | --- | --- |
 | `NUXT_PUBLIC_SITE_URL` | Yes for production | Public origin, e.g. `https://www.client.com.br`. Canonical links, hreflang, sitemap and social images use it. Defaults to `https://www.example.com`. |
-| `CONTENT_SOURCE=sanity` + `SANITY_PROJECT_ID` | Only for Sanity | See [studios/sanity/README.md](../studios/sanity/README.md). Without a project id the build uses the sample seed. |
+| `SANITY_PROJECT_ID` | Yes for a real site | Sanity is the default content source (`CONTENT_SOURCE=sanity`). Without a project id the build uses the sample seed. See [studios/sanity/README.md](../studios/sanity/README.md). Set `CONTENT_SOURCE=local` to build from `content/` instead. |
 | `SANITY_API_READ_TOKEN` | Only for a private dataset | The one secret: build time only, set it in the host's environment settings. |
 | Everything else in [`.env.example`](../.env.example) | No | Form provider, analytics, WhatsApp button, content source. |
 

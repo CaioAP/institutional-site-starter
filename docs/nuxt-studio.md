@@ -3,7 +3,8 @@
 [Nuxt Studio](https://nuxt.studio) is the official visual editor for Nuxt
 Content. It is a free, open-source Nuxt module (`nuxt-studio`, 1.8.0 here),
 self-hosted, with no Nuxt Studio account. It edits the same Markdown/YAML files in
-`content/` and commits them to Git, so the site keeps `CONTENT_SOURCE=local`.
+`content/` and commits them to Git, so it works with `CONTENT_SOURCE=local`
+(the default source is Sanity).
 
 ## Try it locally
 

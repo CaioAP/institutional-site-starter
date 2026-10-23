@@ -83,14 +83,15 @@ All configuration is in [`.env.example`](.env.example).
 
 ## CMS samples
 
-The same site runs from three content setups, for a manual comparison of the
-editor experience ([docs/cms-evaluation.md](docs/cms-evaluation.md)):
+Sanity is the default CMS: editors work in Sanity Studio (Portuguese
+interface) and publishing rebuilds the static site. Why it was chosen over
+Contentful and Nuxt Studio: [docs/cms-evaluation.md](docs/cms-evaluation.md).
 
-| Sample | Command | Notes |
+| Setup | Command | Notes |
 | --- | --- | --- |
-| Local Markdown/YAML (default) | `pnpm dev:local` | Edit files in `content/` ([content/README.md](content/README.md)) |
-| Nuxt Studio | `pnpm dev:studio` | Visual editor on top of `content/`. Production publishing needs an SSR editor deployment ([docs/nuxt-studio.md](docs/nuxt-studio.md)) |
-| Sanity | `pnpm studio:sanity` + `pnpm dev:sanity` | Studio needs your own Sanity project. `dev:sanity` runs on the bundled seed until `SANITY_PROJECT_ID` is set ([studios/sanity/README.md](studios/sanity/README.md)) |
+| Sanity (default) | `pnpm studio:sanity` + `pnpm dev` | Studio needs your own Sanity project. Until `SANITY_PROJECT_ID` is set, the site runs on the bundled seed ([studios/sanity/README.md](studios/sanity/README.md)) |
+| Local Markdown/YAML | `pnpm dev:local` | Edit files in `content/` ([content/README.md](content/README.md)). Also the source of the Sanity seed |
+| Nuxt Studio | `pnpm dev:studio` | Visual editor on top of `content/`, local only. Production publishing needs an SSR editor deployment ([docs/nuxt-studio.md](docs/nuxt-studio.md)) |
 
 Pages never talk to a CMS directly: `CONTENT_SOURCE=local|sanity` selects an
 adapter in `lib/content/`. CI checks that the Sanity sample renders exactly
